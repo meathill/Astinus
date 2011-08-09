@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>ZOL热区图</title>
+<style type="text/css">
+  body{font:12px/18px simsun}
+  body,input,label{padding:0;margin:0}
+  #topbar{width:100%;background:#f0f0f0;border-bottom:2px solid #666;padding:5px 0;position:fixed;top:0;left:0;z-index:10;_position:absolute;
+  _top:expression(documentElement.scrollTop);}
+    #topbar label{margin:0 0 0 10px}
+    #topbar .txt{height:20px;font:14px/20px simsun;border:1px solid #666;padding:0 5px;}
+    #topbar select{height:23px;font:14px/23px simsun;}
+		#topbar .r{padding:5px;float:right}
+			#topbar .r label{margin:0}
+  #advpanel{position:absolute;left:120px;top:35px;padding:5px;background:#f0f0f0;display:none;}
+  #btn{width:60px;height:25px;font:14px/25px simsun}
+  #con{width:100%;overflow:hidden;position:relative;}
+    #map{width:100%;height:200px;position:absolute;z-index:5;top:0;left:0}
+</style>
+<script src="http://icon.zol-img.com.cn/js/jquery-1.5.2.min.js"></script> 
+<script src="http://icon.zol.com.cn/article/templateDIY/js/swfobject.js"></script>
+<script>
+function addFlash() {
+  if ($("#txt").val() != '') {
+    clearInterval(_interval);
+    if (_rec != $('#url').val()) {
+      _rec = $('#url').val();
+      $('#page').attr('src', '../cgi-bin/page_filter.cgi?page=' + _rec);
+    }
+    // 插入flash
+    var _flash_vars = {r:$('#url').val(), u:$('#tourl').val(), d:$('#date').val(), b:$('#btype').val(), ab:$('#ab').val(), nocache:$('#cache').attr('checked') ? 1 : 0};
+    var _param = {allowScriptAccess:'always', wmode:'transparent'};
+    swfobject.embedSWF("../swf/clickHeatMap.swf", "map", "100%", "200", "10.2", "../swf/expressInstall.swf", _flash_vars, _param);
+		$('#map').show();
+  }
+}
+function setMapHeight(num) {
+
+}
+function startAutoScroll(){
+  _interval = setInterval("ui.onScroll()", 500);
+}
+var _interval, _rec;
+var ui = {
+  onKeyDown : function (evt) {
+    if (evt && evt.keyCode == 13) {
+      addFlash();
+    }
+  },
+  onScroll : function () {
+    this.getFlash('map').setOffset(document.documentElement.scrollTop);
+  },
+  getFlash : function (movieName) {
+    if (navigator.appName.indexOf("Microsoft") != -1) {
+      return window[movieName];
+    } else {
+      return document[movieName];
+    }
+  },
+  toggleHeatMap : function () {
+  	if ($('#map').css('visibility') == 'visible'){
+  		$('#map').css('visibility', 'hidden');
+  	} else {
+  		$('#map').css('visibility', 'visible');
+  	}
+  },
+  setMapHeight : function () {
+    var _ifr = $('#page')[0], _h = 0;
+    if (!window.opera) {
+      if (_ifr.contentDocument && _ifr.contentDocument.body.offsetHeight)
+        _h = _ifr.contentDocument.body.offsetHeight; //FF NS
+      else if(_ifr.Document && _ifr.Document.body.scrollHeight)
+        _h = _ifr.Document.body.scrollHeight;//IE
+    } else {
+      if(_ifr.contentWindow.document && _ifr.contentWindow.document.body.scrollHeight)
+        _h = _ifr.contentWindow.document.body.scrollHeight;//Opera
+    }
+    $('#page, #map').height(_h);
+  }
+}
+$(function () {
+  var _today = new Date();
+  var _str = _today.getFullYear() % 100 > 9 ? _today.getFullYear() % 100 : '0' + _today.getFullYear() % 100;
+      _str += (_today.getMonth() + 1) > 9 ? _today.getMonth() + 1 : '0' + (_today.getMonth() + 1);
+      _str += _today.getDate() > 9 ? _today.getDate() : '0' + _today.getDate();
+  $('#date').val(_str);
+  $('body').css('padding-top', $('#topbar').outerHeight() + 'px');
+  $('#advance').click(function () {
+    if ($(this).attr('checked')){
+      $('#advpanel').show();
+    } else {
+      $('#advpanel').hide();
+    }
+  });
+  // 侦听iframe onload事件
+  var _ifr = $('#page')[0];
+  if ($.browser.msie) {
+    _ifr.attachEvent('onload', ui.setMapHeight);
+  }
+});
+</script>
+</head>
+<body>
+<div id="con">
+  <div id="map"></div>
+  <iframe width="100%" height="200" scrolling="no" frameborder="0" id="page" src="about:blank" onload="ui.setMapHeight();"></iframe>
+</div>
+<div id="topbar">
+  <div class="r">
+    <input type="checkbox" id="cbox" checked="checked" onClick="ui.toggleHeatMap();" />
+    <label for="cbox">显示热图</label>
+  </div>
+  <label for="txt">URL</label>
+  <input type="text" id="url" value="http://www.zol.com.cn/" class="txt" onkeydown="ui.onKeyDown(evt);" size="40" />
+  <label for="date">日期：</label>
+  <input type="text" id="date" value="110310" class="txt" onkeydown="ui.onKeyDown(evt);" size="6" />
+  <label for="btype">浏览器类型：</label>
+  <select id="btype">
+    <option value="">不限</option>
+    <option value="IE 6.0">IE 6</option>
+    <option value="Safari">Safari</option>
+    <option value="IE 8.0">IE 8.0</option>
+    <option value="Maxthon">Maxthon</option>
+    <option value="IE 7.0">IE 7.0</option>
+    <option value="Firefox">Firefox</option>
+    <option value="TencentTraveler">TT</option>
+    <option value="Opera">Opera</option>
+    <option value="360SE">360SE</option>
+    <option value="IE 9.0">IE 9.0</option>
+    <option value="GreenBrowser">GreenBrowser</option>
+    <option value="MyIE2">MyIE2</option>
+    <option value="Chrome">Chrome</option>
+    <option value="AppleWebKit">AppleWebKit</option>
+    <option value="UCWEB">UCWEB</option>
+    <option value="NetCaptor">NetCaptor</option>
+    <option value="IE 5.5">IE 5.5</option>
+    <option value="IE 4.0">IE 4.0</option>
+    <option value="IE 5.0">IE 5.0</option>
+    <option value="其他">其他</option>
+  </select>
+  <label for="advance">高级</label>
+  <input type="checkbox" id="advance" />
+  <input type="button" id="btn" value="查看" onclick="addFlash();" />
+  <div id="advpanel">
+    <label for="tourl">导出URL</label>
+    <input type="text" id="tourl" value="" class="txt" onkeydown="ui.onKeyDown(evt);" size="40" />
+    <label for="cache">不缓存</label>
+    <input type="checkbox" id="cache" checked="checked" />
+    <label for="ab">AB测试：</label>
+    <select id="ab">
+      <option value=''>不需</option>
+      <option value='a'>A</option>
+      <option value='b'>B</option>
+    </select>
+  </div>
+</div>
+</body>
+</html>
