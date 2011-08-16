@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <title>测试页面中海量div的效率</title>
+	  <style>
+      html,#containter{height: 100%}
+      body{padding: 10px;margin: 0;font:12px/18px simsun}
+	    #containter{background: #f0f0f0;width:100%;position: relative}
+	      .block{width:150px;height: 30px;border-radius:4px;position: absolute;background: #99ccff;z-index: 1}
+	      .block:hover{background: #def; box-shadow: 2px 2px 0 #333;z-index: 2}
+	    #panel{padding: 10px 0 0}
+	      button{width:100px;height: 25px}
+	  </style>
+	  <script src="http://works.meathill.net/js/jquery-1.6.2.min.js"></script>
+	  <script>
+	    $(function () {
+	      $('#containter').height($(document).height() -  55);
+	      $('.start').click(fill);
+	      width = $('#containter').width() - 150;
+	      height = $('#containter').height() - 30;
+	      con = $('#containter'), end = $('#end_time');
+	    });
+	    const NUMBER = 20000, rate = 1000;
+	    var width = 0, height = 0, pos, con, end;
+	    var count, interval, st;
+	    function fill(evt) {
+	      con.empty().hide();
+	      count = 0;
+	      $(evt.target).prop('disabled', true);
+	      st = (new Date()).getTime();
+	      $('#start_time').html(st);
+	      interval = setInterval(onEnterFrame, 50);
+	    }
+	    function onEnterFrame() {
+	      for (var i = 0; i < rate; i++) {
+	        pos = 'left:' + Math.floor(width * Math.random()) + 'px;top:' + Math.floor(height * Math.random()) + 'px';
+	        $('<div>', {
+	          'class': 'block',
+	          'title': i,
+	          'style': pos
+	        }).prop('disabled', true).appendTo(con);
+	      }
+	      count += rate;
+	      end.html(count);
+	      if (count >= NUMBER) {
+	        clearInterval(interval);
+  	      var et = (new Date()).getTime();
+  	      $('#end_time').html(et + ', total: ' + (et - st));
+  	      $('.start').removeProp('disabled');
+  	      con.show();
+	      }
+ 	    }
+	  </script>
+	</head>
+	<body>
+	  <div id="containter">
+	    &nbsp;
+	  </div>
+	  <div id="panel">
+	    <button class="start">开始填充</button>
+	    <span id="start_time">0</span>
+	    <span id="end_time">0</span>
+	  </div>
+	</body>
+</html>
