@@ -21,6 +21,26 @@ function addFlash() {
 }
 var _rec, _height, _interval;
 var ui = {
+  init : function (argument) {
+    $('#date').val($.datepicker.formatDate('ymmdd', new Date()));
+    $('#date').datepicker({ dateFormat: 'ymmdd', maxDate: '0d' });
+    $('body').css('padding-top', $('#topbar').outerHeight() + 'px');
+    $('#advance').click(function () {
+      if ($(this).prop('checked')){
+        $('#advpanel').show();
+      } else {
+        $('#advpanel').hide();
+      }
+    });
+    _height = $(window).height() - $('#topbar').outerHeight();
+    $('#map_con').height(_height).css('top', $('#topbar').outerHeight() + 'px');
+    // 侦听iframe onload事件
+    var _ifr = $('#page')[0];
+    if ($.browser.msie) {
+      _ifr.attachEvent('onload', ui.setMapHeight);
+    }
+    $('#url').change(ui.onKeyDown);
+  },
   onKeyDown : function (evt) {
     if (evt && evt.keyCode == 13) {
       addFlash();
@@ -39,36 +59,8 @@ var ui = {
   setMapHeight : function () {
     clearInterval(_interval);
     var _ifr = $('#page')[0], _h = 0;
-    /*if (!window.opera) {
-      if (_ifr.contentDocument && _ifr.contentDocument.body.offsetHeight)
-        _h = _ifr.contentDocument.body.offsetHeight; //FF NS
-      else if(_ifr.Document && _ifr.Document.body.scrollHeight)
-        _h = _ifr.Document.body.scrollHeight;//IE
-    } else {
-      if(_ifr.contentWindow.document && _ifr.contentWindow.document.body.scrollHeight)
-        _h = _ifr.contentWindow.document.body.scrollHeight;//Opera
-    }*/
     _h = $('#page').contents().height();
     $('#page, #cover').height(_h);
   }
 }
-$(function () {
-  $('#date').val($.datepicker.formatDate('ymmdd', new Date()));
-  $('#date').datepicker({ dateFormat: 'ymmdd', maxDate: '0d' });
-  $('body').css('padding-top', $('#topbar').outerHeight() + 'px');
-  $('#advance').click(function () {
-    if ($(this).prop('checked')){
-      $('#advpanel').show();
-    } else {
-      $('#advpanel').hide();
-    }
-  });
-  _height = $(window).height() - $('#topbar').outerHeight();
-  $('#map_con').height(_height).css('top', $('#topbar').outerHeight() + 'px');
-  // 侦听iframe onload事件
-  var _ifr = $('#page')[0];
-  if ($.browser.msie) {
-    _ifr.attachEvent('onload', ui.setMapHeight);
-  }
-  $('#url').change(ui.onKeyDown);
-});
+$(ui.init);

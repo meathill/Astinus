@@ -1,0 +1,16 @@
+body{font:12px/18px simsun}
+html,body{height:100%}
+body,input,label{padding:0;margin:0}
+#topbar{width:100%;background:#f0f0f0;border-bottom:2px solid #666;padding:5px 0;position:fixed;top:0;left:0;z-index:10;
+  _position:absolute;_top:expression(documentElement.scrollTop);}
+  #topbar label{margin:0 0 0 10px}
+  #topbar .txt{height:20px;font:14px/20px simsun;border:1px solid #666;padding:0 5px;}
+  #topbar select{height:23px;font:14px/23px simsun;}
+  #topbar .r{padding:5px;float:right}
+    #topbar .r label{margin:0}
+#advpanel{position:absolute;left:120px;top:35px;padding:5px;background:#f0f0f0;display:none;}
+#btn{width:60px;height:24px;font:12px/24px simsun}
+#map_con{width:100%;position:fixed;z-index:5;top:0;left:0;_position:absolute;_top:expression(documentElement.scrollTop + 40)}
+  #map{}
+#con{width:100%;overflow:hidden;position:relative;}
+  #cover{width:100%;background:#000;opacity: 0.3;filter: alpha(opacity=50);position: absolute;z-index: 4;top:0;left:0}
