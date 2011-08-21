@@ -27,7 +27,7 @@ package brunch.clickHeatMap.model
 		public var hits:int = 0;
 		public var pageHeight:int = 0;
 		public var offset:int = 0;
-		public var height:int = 0;
+		public var count:int = 0;
 		public var top:Vector.<Array>;
 		
 		public function dataModel() 
@@ -88,13 +88,13 @@ package brunch.clickHeatMap.model
 				_evt.bytesLoaded = total - _data_arr.length;
 				dispatchEvent(_evt);
 			} else {
-				pageHeight = pageHeight + 100 < 8000 ? pageHeight + 100 : 8000;
-				ExternalInterface.call('setMapHeight', pageHeight);
-				ExternalInterface.addCallback('setOffset', moveBtn);
-				
 				parent.removeEventListener(Event.ENTER_FRAME, parseData);
 				dispatchEvent(new Event(Event.COMPLETE));
 			}
+		}
+		private function onEnterFrame(evt:Event):void {
+			offset = ExternalInterface.call('ui.getScroll');
+			dispatchEvent(new Event(Event.CHANGE));
 		}
 		
 		/************
@@ -105,9 +105,11 @@ package brunch.clickHeatMap.model
 		 * @param	obj
 		 */
 		public function makeParam(obj:Object) {
-			_param.r = 'http://dealer.zol.com.cn/';
-			_param.d = '110223';
-			_param.nocache = 1;
+			_param.r = 'http://www.55bbs.com/';
+			//_param.r = 'http://mobile.zol.com.cn/';
+			_param.d = '110624';
+			_param.nocache = 0;
+			_param.visitor = 'new';
 			for (var prop:String in obj) {
 				trace(prop + ' : ' + obj[prop]);
 				_param[prop] = obj[prop];
@@ -137,12 +139,8 @@ package brunch.clickHeatMap.model
 			
 			return _result;
 		}
-		public function moveBtn(num:int):void {
-			offset = num;
-			dispatchEvent(new Event(Event.CHANGE));
-		}
-		public function startAutoScroll():void {
-			ExternalInterface.call('startAutoScroll');
+		public function startWatchScroll():void {
+			parent.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 	}
 }

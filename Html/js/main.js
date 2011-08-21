@@ -1,10 +1,63 @@
-function addFlash() {
-  if ($("#url").val() != '') {
-    _rec = $('#url').val();
-    $('#page').attr('src', '../cgi-bin/page_filter.cgi?page=' + _rec + '&ab=' + $('#ab').val() + '&d=' + $('#date').val());
+/******************************************************************************
+ * 热区图
+ * @author Meathill
+ * @version 0.2(2011-08-20)
+ * ***************************************************************************/
+/**
+ * 处理界面和用户交互
+ * @author Meathill
+ * @version 0.1(2011-08-20)
+ */
+var ui = {
+  height: 0,
+  interval: 0,
+  init : function () {
+    // 日期选项
+    $('#date')
+      .datepicker({dateFormat: 'ymmdd', maxDate: '0d'})
+      .val($.datepicker.formatDate('ymmdd', new Date()));
+    $('#icon-calendar').click(function () {
+      $('#date').datepicker('show');
+    });
+    // 按钮
+    $('#panel button')
+      .button()
+      .click(ui.createHeatMap);
+    $('#options_btn')
+      .button({icons: { primary: "ui-icon-gear" }})
+      .click(function (evt) { $('#options').slideToggle(); });
+    $('#map_visible')
+      .button()
+      .click(ui.toggleHeatMap);
+    $('#topbar button').button({
+      icons: { primary: 'ui-icon-triangle-1-n'},
+      text: false
+    }).click(function (evt) {
+      $('#topbar').animate({top: '-25px'}, function () {
+        $(this).one('mouseover', function (evt) {
+          $(this).animate({top: '0px'});
+        })
+      });
+    });
+    // 侦听iframe onload事件
+    if ($.browser.msie) {
+      var _ifr = $('#page')[0];
+      _ifr.attachEvent('onload', ui.setMapHeight);
+    }
+    $('#url').keydown(ui.onKeyDown);
+  },
+  createHeatMap : function () {
+    var target = $('#url').val();
+    if (target == '' || target == 'http://') {
+      alert('目标Url输入错误');
+      $('#url').addClass('ui-state-error').focus();
+      return;
+    }
+    // 在iframe中加载页面
+    $('#page').attr('src', '../cgi-bin/page_filter.cgi?page=' + target + '&ab=' + $('#ab').val() + '&d=' + $('#date').val());
     // 插入flash
-    var _flash_vars = {
-      r: $('#url').val(),
+    var flashVars = {
+      r: target,
       u: $('#tourl').val(),
       d: $('#date').val(),
       b: $('#btype').val(),
@@ -12,44 +65,39 @@ function addFlash() {
       nocache: $('#cache').prop('checked') ? 0 : 1,
       visitor: $('#oldnew').val()
     };
-    var _param = {allowScriptAccess:'always', wmode:'transparent'};
-    swfobject.embedSWF("../swf/clickHeatMap.swf", "map", "100%", _height, "10.3", "../swf/expressInstall.swf", _flash_vars, _param);
+    var param = {allowScriptAccess:'always', wmode:'transparent'};
+    swfobject.embedSWF("../swf/clickHeatMap.swf", "map", "100%", "100%", "10.3", "../swf/expressInstall.swf", flashVars, param);
     $('#map_con').show();
-    // 30s后自动取已加载页面的高度
-    _interval = setInterval(ui.setMapHeight, 30000);
-  }
-}
-var _rec, _height, _interval;
-var ui = {
-  init : function (argument) {
-    $('#date').val($.datepicker.formatDate('ymmdd', new Date()));
-    $('#date').datepicker({ dateFormat: 'ymmdd', maxDate: '0d' });
-    $('body').css('padding-top', $('#topbar').outerHeight() + 'px');
-    $('#advance').click(function () {
-      if ($(this).prop('checked')){
-        $('#advpanel').show();
+    // 隐藏面板
+    $('#panel').fadeOut();
+    // 显示状态条
+    $('#topbar').slideDown();
+    $('#topbar .url').html($('#url').val()).click(function (evt) {
+      if ($('#panel').css('display') == 'block') {
+        $('#panel').fadeOut();
+        $(this).attr('title', '点击修改参数');
       } else {
-        $('#advpanel').hide();
+        $('#panel').fadeIn();
+        $(this).attr('title', '关闭选项面板');
       }
     });
-    _height = $(window).height() - $('#topbar').outerHeight();
-    $('#map_con').height(_height).css('top', $('#topbar').outerHeight() + 'px');
-    // 侦听iframe onload事件
-    var _ifr = $('#page')[0];
-    if ($.browser.msie) {
-      _ifr.attachEvent('onload', ui.setMapHeight);
-    }
-    $('#url').change(ui.onKeyDown);
+    // 显示侧边控制栏
+    // 显示iframe等
+    $('#con, #map_con').removeClass('hide');
+    
+    // 30s后自动取已加载页面的高度
+    ui.interval = setInterval(ui.setMapHeight, 30000);
   },
   onKeyDown : function (evt) {
+    $(evt.target).removeClass('ui-state-error');
     if (evt && evt.keyCode == 13) {
-      addFlash();
+      ui.createHeatMap();
     }
   },
   getScroll : function () {
     return document.documentElement.scrollTop || document.body.scrollTop;
   },
-  toggleHeatMap : function () {
+  toggleHeatMap : function (evt) {
     if ($('#map_con').css('visibility') == 'visible'){
       $('#map_con, #map, #cover').css('visibility', 'hidden');
     } else {
@@ -57,10 +105,12 @@ var ui = {
     }
   },
   setMapHeight : function () {
-    clearInterval(_interval);
+    clearInterval(ui.interval);
     var _ifr = $('#page')[0], _h = 0;
     _h = $('#page').contents().height();
     $('#page, #cover').height(_h);
   }
 }
+
+// 自动运行
 $(ui.init);

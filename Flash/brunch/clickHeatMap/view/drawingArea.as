@@ -13,7 +13,7 @@ package brunch.clickHeatMap.view
 	 */
 	public class drawingArea extends Sprite
 	{
-		public static const PANEL_WIDTH:int = 300;
+		public static const PANEL_WIDTH:int = 450;
 		public static const PANEL_HEIGHT:int = 300;
 		
 		public static var cur:drawingArea;

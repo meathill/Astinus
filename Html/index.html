@@ -1,77 +1,98 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-<title>ZOL热区图</title>
-<link href="css/main.css" rel="stylesheet" />
-<link href="http://icon.zol.com.cn/css/jquery-ui/jquery-ui.css" rel="stylesheet" />
-<script src="http://icon.zol-img.com.cn/js/jquery-1.6.1.min.js"></script>
-<script src="http://icon.zol-img.com.cn/js/jquery-ui.js"></script>
-<script src="http://icon.zol.com.cn/article/templateDIY/js/swfobject.js"></script>
-<script src="js/main.js"></script>
-</head>
-<body>
-<div id="map_con">
-  <div id="map"></div>
-</div>
-<div id="con">
-  <div id="cover"></div>
-  <iframe width="100%" height="200" scrolling="no" frameborder="0" id="page" src="about:blank" onload="ui.setMapHeight();"></iframe>
-</div>
-<div id="topbar">
-  <div class="r">
-    <input type="checkbox" id="cbox" checked="checked" onClick="ui.toggleHeatMap();" />
-    <label for="cbox">显示热图</label>
-  </div>
-  <label for="url">URL</label>
-  <input type="text" id="url" value="http://www.zol.com.cn/" class="txt" size="40" />
-  <label for="date">日期：</label>
-  <input type="text" id="date" value="" class="txt" onkeydown="ui.onKeyDown(evt);" size="6" />
-  <label for="advance">高级</label>
-  <input type="checkbox" id="advance" />
-  <input type="button" id="btn" value="查看" onclick="addFlash();" />
-  <div id="advpanel">
-    <label for="btype">浏览器类型：</label>
-    <select id="btype">
-      <option value="">不限</option>
-      <option value="IE 6.0">IE 6</option>
-      <option value="Safari">Safari</option>
-      <option value="IE 8.0">IE 8.0</option>
-      <option value="Maxthon">Maxthon</option>
-      <option value="IE 7.0">IE 7.0</option>
-      <option value="Firefox">Firefox</option>
-      <option value="TencentTraveler">TT</option>
-      <option value="Opera">Opera</option>
-      <option value="360SE">360SE</option>
-      <option value="IE 9.0">IE 9.0</option>
-      <option value="GreenBrowser">GreenBrowser</option>
-      <option value="MyIE2">MyIE2</option>
-      <option value="Chrome">Chrome</option>
-      <option value="AppleWebKit">AppleWebKit</option>
-      <option value="UCWEB">UCWEB</option>
-      <option value="NetCaptor">NetCaptor</option>
-      <option value="IE 5.5">IE 5.5</option>
-      <option value="IE 4.0">IE 4.0</option>
-      <option value="IE 5.0">IE 5.0</option>
-      <option value="其他">其他</option>
-    </select>
-    <label for="tourl">导出URL</label>
-    <input type="text" id="tourl" value="" class="txt" onkeydown="ui.onKeyDown(evt);" size="40" />
-    <label for="cache">缓存</label>
-    <input type="checkbox" id="cache" checked="checked" />
-    <label for="ab">AB测试：</label>
-    <select id="ab">
-      <option value=''>不需</option>
-      <option value='a'>A</option>
-      <option value='b'>B</option>
-    </select>
-    <label for="oldnew">新老用户</label>
-    <select id="oldnew" title='用户访问当前页面时，是否已经被记录了cookie。此项在入口着陆页比较能看出问题'>
-      <option value=''>全部</option>
-      <option value='new'>新用户</option>
-      <option value='old'>老用户</option>
-    </select>
-  </div>
-</div>
-</body>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>Astinus热区图</title>
+    <link rel="stylesheet" href="http://works.meathill.net/css/cupertino/jquery-ui-1.8.16.custom.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="http://works.meathill.net/js/jquery-1.6.2.min.js"></script>
+    <script src="http://works.meathill.net/js/jquery-ui-1.8.16.custom.min.js"></script>
+    <script src="http://icon.zol.com.cn/article/templateDIY/js/swfobject.js"></script>
+    <script src="js/main.js"></script>
+  </head>
+  <body>
+    <div id="panel">
+      <div id="icon" class="shadow">
+        <a href="https://github.com/meathill/Astinus/issues/" title="Astinus 欢迎举报BUG，我承诺一定尽快修复" target="_blank">
+          <img src="images/logo.png" width="150" height="150" alt="肉山竭诚为您服务" />
+        </a>
+      </div>
+      <div class="sidebar">
+        <h1>Astinus热区图</h1>
+        <div class="search shadow">
+          <input type="text" name="url" id="url" class="txt txt1" title="页面地址" value="http://" tabindex="1" />
+          <button type="submit" class="btn" tabindex="3">检查</button>
+          <br />
+          <input type="text" name="date" id="date" class="txt txt2" title="选择日期" readonly="readonly" tabindex="2" />
+          <div class="ui-state-default ui-corner-all" id="icon-calendar" title="选择日期">
+            <span class="ui-icon ui-icon-calendar"></span>
+          </div>
+          <input type="checkbox" id="options_btn" tabindex="4" /><label for="options_btn">高级</label>
+        </div>
+        <div id="options" class="hide">
+          <label for="btype">浏览器类型</label>
+          <select id="btype" tabindex="5">
+            <option value="">不限</option>
+            <option value="IE 6.0">IE 6</option>
+            <option value="Safari">Safari</option>
+            <option value="IE 8.0">IE 8.0</option>
+            <option value="Maxthon">Maxthon</option>
+            <option value="IE 7.0">IE 7.0</option>
+            <option value="Firefox">Firefox</option>
+            <option value="TencentTraveler">TT</option>
+            <option value="Opera">Opera</option>
+            <option value="360SE">360SE</option>
+            <option value="IE 9.0">IE 9.0</option>
+            <option value="GreenBrowser">GreenBrowser</option>
+            <option value="MyIE2">MyIE2</option>
+            <option value="Chrome">Chrome</option>
+            <option value="AppleWebKit">AppleWebKit</option>
+            <option value="UCWEB">UCWEB</option>
+            <option value="NetCaptor">NetCaptor</option>
+            <option value="IE 5.5">IE 5.5</option>
+            <option value="IE 4.0">IE 4.0</option>
+            <option value="IE 5.0">IE 5.0</option>
+            <option value="其他">其他</option>
+          </select>
+          <br />
+          <label for="tourl">导出URL</label>
+          <input type="text" id="tourl" value="" onkeydown="ui.onKeyDown(evt);" size="40" tabindex="6" />
+          <br />
+          <label for="cache">缓存</label>
+          <input type="checkbox" id="cache" checked="checked" tabindex="7" />
+          <br />
+          <label for="ab">AB测试</label>
+          <select id="ab" tabindex="8">
+            <option value=''>不需</option>
+            <option value='a'>A</option>
+            <option value='b'>B</option>
+          </select>
+          <br />
+          <label for="oldnew">新老用户</label>
+          <select id="oldnew" title='用户访问当前页面时，是否已经被记录了cookie。此项在入口着陆页比较能看出问题' tabindex="9">
+            <option value=''>全部</option>
+            <option value='new'>新用户</option>
+            <option value='old'>老用户</option>
+          </select>
+        </div>
+        <div class="cp">
+          Ver 0.2<br />
+          Powered by <a href="http://blog.meathill.net/" title="山维空间" target="_blank">Meathill</a>
+        </div>
+      </div>
+    </div>
+    <div id="topbar" class="ui-widget-header hide">
+      <button id="foleded" type="button">收起</button>
+      <label for="map_visible">显示热图</label>
+      <input type="checkbox" id="map_visible" checked="checked" />
+      <div class="url" title="点击修改参数"></div>
+    </div>
+    <div id="map_con" class="hide">
+      <div id="map"></div>
+    </div>
+    <div id="con" class="hide">
+      <div id="cover"></div>
+      <iframe width="100%" height="200" scrolling="no" frameborder="0" id="page" src="about:blank" onload="ui.setMapHeight();"></iframe>
+    </div>
+  </body>
 </html>

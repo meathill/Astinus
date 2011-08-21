@@ -17,13 +17,16 @@ package brunch.clickHeatMap.view
 	 */
 	public class mapView extends Sprite
 	{
-		public static const RATE:int = 512;
+		public static const RATE:int = 256;
+		public static const MAX_WIDTH:int = 1680;
+		public static const MAX_HEIGHT:int = 8000;
 		
 		public var data:dataModel;
 		
 		private const _HEAT:uint = 0x99000000;
 		
 		private var _heat_area:BitmapData;
+		private var _bmps:Array;
 		private var _bmp:Bitmap;
 		private var _data_arr:Vector.<Array>;
 		private var _tips:curLinkTips;
@@ -45,21 +48,12 @@ package brunch.clickHeatMap.view
 			while (_count > 0 && data.top[_count][4] < num) {
 				_count--;
 			}
-			_data_arr = data.top.slice(0, _count + 1);
-			if (_data_arr.length != _total) {
-				_heat_area.dispose();
-				_heat_area = new BitmapData(_width, _height, true, 0);
-				_bmp.bitmapData = _heat_area;
-				addEventListener(Event.ENTER_FRAME, drawing);
+			if (_count + 1 != _total) {
+				draw(data.top.slice(0, _count + 1));
 			}
 		}
 		override public function get width():Number { 
 			return _width;
-		}
-		
-		override public function set width(value:Number):void 
-		{
-			super.width = value;
 		}
 		
 		/************
@@ -69,22 +63,25 @@ package brunch.clickHeatMap.view
 			_width = w, _height = h;
 			_tips = curLinkTips(removeChildAt(0));
 			
-			_heat_area = new BitmapData(w, h, true, 0);
-			_bmp = new Bitmap(_heat_area);
-			addChild(_bmp);
-			
-			// 画个背景
-			graphics.beginFill(0x000000, 0);
-			graphics.drawRect(0, 0, w, h);
-			graphics.endFill();
+			// 如果高度大于最大高度，那么建立一个数组来存储所有位图
+			_bmps = [];
+			for (var i:int = 0, len:int = Math.ceil(h / MAX_HEIGHT); i < len; i += 1) {
+				_heat_area = new BitmapData(w, h > MAX_HEIGHT? MAX_HEIGHT : h, true, 0);
+				_bmp = new Bitmap(_heat_area);
+				_bmp.y = MAX_HEIGHT * i;
+				addChild(_bmp);
+				_bmps[i] = _bmp;
+				h -= MAX_HEIGHT;
+			}
 		}
 		private function drawing(evt:Event):void {
 			var _time:int = getTimer();
-			_heat_area.lock();
+			for each (var _bmp:Bitmap in _bmps) {
+				_bmp.bitmapData.lock();
+			}
 			while (getTimer() - _time < 25 && _data_arr.length > 0) {
-				for (var i:int = 0, ilen:int = Math.min(RATE, _data_arr.length); i < ilen; i += 1) { 
+				for (var i:int = 0, ilen:int = _data_arr.length < RATE ? _data_arr.length : RATE; i < ilen; i += 1) { 
 					var _arr:Array = _data_arr.pop();
-					var _rect:Rectangle = new Rectangle(_arr[0], _arr[1], _arr[2], _arr[3]);
 					var _color:uint = _HEAT;
 					if (_arr[4] < _mid) {
 						_color += ((_mid - _arr[4]) / _mid * 0xff << 16) + ((_mid - _arr[4]) / _mid * 0xff << 8) + 0xff;
@@ -95,10 +92,16 @@ package brunch.clickHeatMap.view
 					} else {
 						_color += 0xffff00 - ((_arr[4] - _mid * 1.67) / _mid * 3 * 0xff << 8);
 					}
-					_heat_area.fillRect(_rect, _color);
+					for (var j:int = _arr[1] / MAX_HEIGHT >> 0, len:int = Math.ceil((_arr[1] + _arr[3]) / MAX_HEIGHT); j < len; j += 1) { 
+						var _rect:Rectangle = new Rectangle(_arr[0], _arr[1] - MAX_HEIGHT * j, _arr[2], _arr[3] > MAX_HEIGHT * (j + 1) ? MAX_HEIGHT * (j + 1) : _arr[3]);
+						_heat_area = Bitmap(_bmps[j]).bitmapData;
+						_heat_area.fillRect(_rect, _color);
+					}
 				}
 			}
-			_heat_area.unlock();
+			for each (_bmp in _bmps) {
+				_bmp.bitmapData.unlock();
+			}
 			if (_data_arr.length == 0) {
 				removeEventListener(Event.ENTER_FRAME, drawing);
 				dispatchEvent(new Event(Event.COMPLETE));
@@ -113,7 +116,7 @@ package brunch.clickHeatMap.view
 				var _arr:Array = _touch[0];
 				_tips.x = _arr[0], _tips.y = _arr[1];
 				_tips.setContent(_arr[5], _arr[4], _arr[2], _arr[3]);
-				addChildAt(_tips, 1);
+				addChildAt(_tips, _bmps.length);
 			} else if (contains(_tips)) {
 				removeChild(_tips);
 			}
@@ -129,11 +132,7 @@ package brunch.clickHeatMap.view
 			
 			var _area:drawingArea = new drawingArea();
 			_area.isCur = true;
-			if (evt.target == this) {
-				_ori_x = _area.x = evt.localX, _ori_y = _area.y = evt.localY;
-			} else {
-				
-			}
+			_ori_x = _area.x = evt.localX, _ori_y = _area.y = evt.localY;
 			addChild(_area);
 		}
 		private function onDrawing(evt:MouseEvent):void {
@@ -171,7 +170,15 @@ package brunch.clickHeatMap.view
 		 * methods
 		 * *********/
 		public function draw(arr:Vector.<Array>, max:int = 0):void {
-			_mid = max >> 1;
+			if (max > 0) {
+				_mid = max >> 1;
+			}
+			// 更新bmpd
+			for each (_bmp in _bmps) {
+				_heat_area = new BitmapData(_bmp.width, _bmp.height, true, 0);
+				_bmp.bitmapData.dispose();
+				_bmp.bitmapData = _heat_area;
+			}
 			_total = arr.length;
 			_data_arr = arr;
 			addEventListener(Event.ENTER_FRAME, drawing);

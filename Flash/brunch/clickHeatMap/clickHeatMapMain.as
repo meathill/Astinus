@@ -41,7 +41,7 @@ package brunch.clickHeatMap
 		 * functions
 		 * *********/
 		override protected function dataInit(evt:Event = null):void {
-			_menu.version = '0.2';
+			_menu.version = '0.3';
 			
 			_data = new dataModel();
 			_data.parent = this;
@@ -67,7 +67,7 @@ package brunch.clickHeatMap
 			_help_mc = getChildAt(1) as controlPanelView;
 			_help_mc.x = stage.stageWidth - 260;
 			_help_mc.toggleHelp();
-			_help_mc.addEventListener(Event.CHANGE, moveMap);
+			_help_mc.addEventListener(Event.CHANGE, onStageResize);
 			_help_mc.addEventListener(Event.RESIZE, onLimitResize);
 			
 			_help_btn = getChildAt(0) as SimpleButton;
@@ -105,9 +105,11 @@ package brunch.clickHeatMap
 			
 			_help_mc.max = _data.max;
 			
-			_map = new mapView(stage.stageWidth, _data.pageHeight);
-			_map.addEventListener(Event.COMPLETE, onMapComplete);
+			// 将地图宽度限制在1680以下，如此高度起码可以达到9600高
+			_map = new mapView(stage.stageWidth > mapView.MAX_WIDTH ? mapView.MAX_WIDTH : stage.stageWidth, _data.pageHeight);
+			_map.x = stage.stageWidth - _map.width >> 1;
 			_map.data = _data;
+			_map.addEventListener(Event.COMPLETE, onMapComplete);
 			_map.draw(_data.top.concat(), _data.max);
 			addChildAt(_map, 0);
 		}
@@ -115,27 +117,17 @@ package brunch.clickHeatMap
 			if (contains(_loading_txt)) {
 				removeChild(_loading_txt);
 			}
-			_data.startAutoScroll();
-		}
-		private function moveMap(evt:Event):void {
-			_map.x = _help_mc.toX;
-			_map.y = _help_mc.toY;
+			_data.startWatchScroll();
 		}
 		private function onLimitResize(evt:Event):void {
 			_map.limit = _help_mc.limit;
 		}
 		private function onOffsetChange(evt:Event):void {
-			_help_mc.y = 45 + _data.offset;
-			_help_btn.y = 20 + _data.offset;
+			_map.y = -_data.offset + _help_mc.toY;
 		}
-		private function onStageResize(evt:Event):void {
-			graphics.clear();
-			graphics.beginFill(0x000000, .3);
-			graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-			graphics.endFill();
-			
+		private function onStageResize(evt:Event):void {			
 			if (_map != null) {
-				_map.x = stage.stageWidth - _map.width >> 1;
+				_map.x = (stage.stageWidth - _map.width >> 1) + _help_mc.toX;
 			}
 		}
 	}

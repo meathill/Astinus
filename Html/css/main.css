@@ -1,16 +1,55 @@
-body{font:12px/18px simsun}
-html,body{height:100%}
-body,input,label{padding:0;margin:0}
-#topbar{width:100%;background:#f0f0f0;border-bottom:2px solid #666;padding:5px 0;position:fixed;top:0;left:0;z-index:10;
-  _position:absolute;_top:expression(documentElement.scrollTop);}
-  #topbar label{margin:0 0 0 10px}
-  #topbar .txt{height:20px;font:14px/20px simsun;border:1px solid #666;padding:0 5px;}
-  #topbar select{height:23px;font:14px/23px simsun;}
-  #topbar .r{padding:5px;float:right}
-    #topbar .r label{margin:0}
-#advpanel{position:absolute;left:120px;top:35px;padding:5px;background:#f0f0f0;display:none;}
-#btn{width:60px;height:24px;font:12px/24px simsun}
-#map_con{width:100%;position:fixed;z-index:5;top:0;left:0;_position:absolute;_top:expression(documentElement.scrollTop + 40)}
+/**
+ * 页面通用
+ */  
+body{font:12px/18px simsun;color:#333}
+body{height:100%}
+body,p,form,input,select,h1{padding:0;margin:0}
+img{border:0}
+a{color:#333;text-decoration: none}
+a:hover{color:#f60;text-decoration:underline}
+h1{font:bolder 30px/40px microsoft yahei,simhei;color:#3d80b3;padding:0 0 20px 20px;}
+
+.ui-corner-all{border-radius: 2px}
+.ui-button-text{padding: 0 !important}
+.shadow{box-shadow: 1px 2px 1px rgba(0,0,0,.3)}
+.hide{display: none}
+
+/**
+ * 面板区域
+ */
+#panel{width:600px;margin-left:-310px;position:absolute;left:50%;top:100px;z-index: 10;padding: 10px;background:rgba(255, 255, 255, .8);border-radius:10px}
+#panel div{float:left}
+#icon{width:152px;height:152px;padding:10px;background:#D7EBF9;border:2px solid #AED0EA;border-radius:10px;}
+#panel .sidebar{width:424px;position:relative}
+  #panel .search{width:424px;padding:10px 0 5px;background:#D7EBF9;border:2px solid #AED0EA;border-radius:0 10px 10px 0;border-left:none;
+    position:absolute;top:60px;left:-2px;z-index:2;}
+  #panel .txt{height:20px;font:14px/20px Arial;border:1px solid #ccc;padding:2px;margin: 0 0 5px}
+    #panel .txt1{width:322px}
+    #panel .txt2{width:120px}
+  #panel .btn{width:80px;height:27px;font:bold 16px/20px simsun}
+  #panel label.ui-button{width:68px;font:12px/20px simsun;padding: 4px 0 3px 10px;margin:0 10px;float: right}
+  #panel .cp{width:410px;text-align:right;font:10px/15px Tahoma;color:#999;position: absolute;right: 0; top:9px}
+  #panel .op{width:400px;position:absolute;top:154px;left:20px;font-size:12px}
+
+#options{width:360px;position:absolute;right:12px;top:140px;padding:8px 5px 2px;background:#F2F5F7;border:1px solid #ddd;border-radius:0 0 4px 4px;z-index: 1}
+  #options label{width: 64px;text-align: right;display: inline-block;margin: 0 0 4px}
+#icon-calendar{position: absolute;left: 104px;top:46px;cursor: pointer}
+
+/**
+ * 页面加载
+ */
+#map_con{width:100%;height:100%;position:fixed;z-index:3;top:0;left:0;}
   #map{}
 #con{width:100%;overflow:hidden;position:relative;}
-  #cover{width:100%;background:#000;opacity: 0.3;filter: alpha(opacity=50);position: absolute;z-index: 4;top:0;left:0}
+  #cover{width:100%;background:#000;opacity: 0.3;filter: alpha(opacity=50);position: absolute;z-index: 1;top:0;left:0}
+
+/**
+ * 顶部通栏
+ */
+#topbar{width:600px;border-top:none;padding:5px;margin-left:-310px;position:fixed;left:50%;top:0;z-index:5;
+  _position:absolute;_top:expression(documentElement.scrollTop);border-radius: 0 0 4px 4px;font-weight: normal;
+  color:#2779AA}
+  #topbar .url{;padding:0 5px;width: 400px;overflow: hidden;cursor:pointer}
+    #topbar .url:hover{background:#f0f9ff;border-top:1px solid #DEEDF7;border-left: 1px solid #DEEDF7;line-height: 17px;padding-left:4px}
+  #topbar label.ui-button{width: 60px;font:12px/20px simsun;float: right}
+  #topbar button{float: right;margin: 0 5px;width:18px;height: 18px}
