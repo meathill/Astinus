@@ -9,7 +9,6 @@
  * @version 0.1(2011-08-20)
  */
 var ui = {
-  height: 0,
   interval: 0,
   init : function () {
     // 日期选项
@@ -73,12 +72,12 @@ var ui = {
     // 显示状态条
     $('#topbar').slideDown();
     $('#topbar .url').html($('#url').val()).click(function (evt) {
-      if ($('#panel').css('display') == 'block') {
-        $('#panel').fadeOut();
-        $(this).attr('title', '点击修改参数');
-      } else {
+      if ($('#panel').css('display') == 'none') {
         $('#panel').fadeIn();
         $(this).attr('title', '关闭选项面板');
+      } else {
+        $('#panel').fadeOut();
+        $(this).attr('title', '点击修改参数');
       }
     });
     // 显示侧边控制栏

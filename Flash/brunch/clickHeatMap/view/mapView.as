@@ -90,7 +90,7 @@ package brunch.clickHeatMap.view
 					} else if (_arr[4] < _mid * 1.67) {
 						_color += 0x00ff00 + ((_arr[4] - _mid * 1.33) / _mid * 3 * 0xff << 16);
 					} else {
-						_color += 0xffff00 - ((_arr[4] - _mid * 1.67) / _mid * 3 * 0xff << 8);
+						_color += 0xffff00 - (int(_arr[4] - _mid * 1.67) / _mid * 3 * 0xff << 8);
 					}
 					for (var j:int = _arr[1] / MAX_HEIGHT >> 0, len:int = Math.ceil((_arr[1] + _arr[3]) / MAX_HEIGHT); j < len; j += 1) { 
 						var _rect:Rectangle = new Rectangle(_arr[0], _arr[1] - MAX_HEIGHT * j, _arr[2], _arr[3] > MAX_HEIGHT * (j + 1) ? MAX_HEIGHT * (j + 1) : _arr[3]);
@@ -169,19 +169,23 @@ package brunch.clickHeatMap.view
 		/************
 		 * methods
 		 * *********/
-		public function draw(arr:Vector.<Array>, max:int = 0):void {
+		public function draw(arr:Vector.<Array>, max:int = 0, min:int = 0):void {
 			if (max > 0) {
 				_mid = max >> 1;
 			}
-			// 更新bmpd
-			for each (_bmp in _bmps) {
-				_heat_area = new BitmapData(_bmp.width, _bmp.height, true, 0);
-				_bmp.bitmapData.dispose();
-				_bmp.bitmapData = _heat_area;
-			}
-			_total = arr.length;
-			_data_arr = arr;
-			addEventListener(Event.ENTER_FRAME, drawing);
+      if (min > 0) {
+        limit = min;
+      } else {
+        // 更新bmpd
+        for each (_bmp in _bmps) {
+          _heat_area = new BitmapData(_bmp.width, _bmp.height, true, 0);
+          _bmp.bitmapData.dispose();
+          _bmp.bitmapData = _heat_area;
+        }
+        _total = arr.length;
+        _data_arr = arr;
+        addEventListener(Event.ENTER_FRAME, drawing);
+      }
 		}
 	}
 }

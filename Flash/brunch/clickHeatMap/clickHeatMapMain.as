@@ -41,8 +41,6 @@ package brunch.clickHeatMap
 		 * functions
 		 * *********/
 		override protected function dataInit(evt:Event = null):void {
-			_menu.version = '0.3';
-			
 			_data = new dataModel();
 			_data.parent = this;
 			_data.clientWidth = dataPanel.cw = stage.stageWidth;
@@ -110,7 +108,7 @@ package brunch.clickHeatMap
 			_map.x = stage.stageWidth - _map.width >> 1;
 			_map.data = _data;
 			_map.addEventListener(Event.COMPLETE, onMapComplete);
-			_map.draw(_data.top.concat(), _data.max);
+			_map.draw(_data.top.concat(), _data.max, _help_mc.limit);
 			addChildAt(_map, 0);
 		}
 		private function onMapComplete(evt:Event):void {

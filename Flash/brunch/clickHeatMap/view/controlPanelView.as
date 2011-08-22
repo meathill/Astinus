@@ -23,7 +23,7 @@ package brunch.clickHeatMap.view
 	 */
 	public class controlPanelView extends Sprite
 	{
-		public var limit:int = 0;
+		private var _limit:int = 0;
 		private var _max:TextField;
 		private var _colorbar:SimpleButton;
 		private var _tri_btn:Sprite;
@@ -60,6 +60,17 @@ package brunch.clickHeatMap.view
 		public function get toY():int {
 			return int(_y_txt.text);
 		}
+    public function get limit():int {
+      return _limit;
+    }
+    public function set limit(value:int):void {
+      _limit = value;
+      _num.value = value;
+      _num.max = value > _num.max ? value : _num.max;
+      _max.text = _num.max.toString();
+      setLevel();
+    }
+    
 		
 		/************
 		 * functions
@@ -89,6 +100,9 @@ package brunch.clickHeatMap.view
 			_x_txt.setSize(30, 20);
 			_y_txt.setSize(30, 20);
 			_x_txt.restrict = _y_txt.restrict = '\-0-9';
+      
+      // 默认从点击数>2的绘制
+      limit = 3;
 			
 			addEventListener(FocusEvent.FOCUS_IN, onFocus);
 		}
@@ -115,9 +129,9 @@ package brunch.clickHeatMap.view
 			if (evt != null) {
 				_tri_btn.x = evt.localX - 6 + _colorbar.x;
 			}
-			limit = int((_tri_btn.x - _colorbar.x + 6) / _colorbar.width * int(_max.text));
-			_tri_btn.x = _colorbar.width * limit / int(_max.text) + _colorbar.x - 6;
-			_num.value = limit;
+			_limit = int((_tri_btn.x - _colorbar.x + 6) / _colorbar.width * int(_max.text));
+			_tri_btn.x = _colorbar.width * _limit / int(_max.text) + _colorbar.x - 6;
+			_num.value = _limit;
 			_num.x = _tri_btn.x + 6 - (_num.width >> 1);
 			
 			dispatchEvent(new Event(Event.RESIZE));
@@ -143,7 +157,7 @@ package brunch.clickHeatMap.view
 		private function onStepperChange(evt:Event):void {
 			_tri_btn.x = _num.value / int(_max.text) * _colorbar.width + _colorbar.x - 6;
 			_num.x = _tri_btn.x + 6 - (_num.width >> 1);
-			limit = _num.value;
+			_limit = _num.value;
 			dispatchEvent(new Event(Event.RESIZE));
 		}
 		

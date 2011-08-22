@@ -105,7 +105,7 @@ package brunch.clickHeatMap.model
 		 * @param	obj
 		 */
 		public function makeParam(obj:Object) {
-			_param.r = 'http://www.55bbs.com/';
+			_param.r = 'http://dealer.zol.com.cn/';
 			//_param.r = 'http://mobile.zol.com.cn/';
 			_param.d = '110624';
 			_param.nocache = 0;
