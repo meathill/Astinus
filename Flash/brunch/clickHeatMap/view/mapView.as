@@ -79,18 +79,22 @@ package brunch.clickHeatMap.view
 			for each (var _bmp:Bitmap in _bmps) {
 				_bmp.bitmapData.lock();
 			}
+      // 因为最后一截总是算国界，导致最高的颜色不是红色而是黄色
+      // 所以限制最大不超过0xFF00
+      var tmpColor:uint = 0;
 			while (getTimer() - _time < 25 && _data_arr.length > 0) {
 				for (var i:int = 0, ilen:int = _data_arr.length < RATE ? _data_arr.length : RATE; i < ilen; i += 1) { 
 					var _arr:Array = _data_arr.pop();
 					var _color:uint = _HEAT;
 					if (_arr[4] < _mid) {
-						_color += ((_mid - _arr[4]) / _mid * 0xff << 16) + ((_mid - _arr[4]) / _mid * 0xff << 8) + 0xff;
+						_color += ((_mid - _arr[4]) / _mid * 0xff << 16) + ((_mid - _arr[4]) / _mid * 0xff << 8) + 0xFF;
 					} else if (_arr[4] < _mid * 1.33) {
-						_color += ((_arr[4] - _mid) / _mid * 3) * 0xfe01 + 0xff;
-					} else if (_arr[4] < _mid * 1.67) {
-						_color += 0x00ff00 + ((_arr[4] - _mid * 1.33) / _mid * 3 * 0xff << 16);
+						_color += ((_arr[4] - _mid) / _mid * 3) * 0xfe01 + 0xFF;
+					} else if (_arr[4] < _mid * 1.66) {
+						_color += 0x00ff00 + ((_arr[4] - _mid * 1.33) / _mid * 3 * 0xFF << 16);
 					} else {
-						_color += 0xffff00 - (int(_arr[4] - _mid * 1.67) / _mid * 3 * 0xff << 8);
+            tmpColor = (_arr[4] - _mid * 1.66) / _mid * 3 * 0xFF << 8;
+						_color += 0xFFFF00 - (0xFF00 < tmpColor ? 0xFF00 : tmpColor);
 					}
 					for (var j:int = _arr[1] / MAX_HEIGHT >> 0, len:int = Math.ceil((_arr[1] + _arr[3]) / MAX_HEIGHT); j < len; j += 1) { 
 						var _rect:Rectangle = new Rectangle(_arr[0], _arr[1] - MAX_HEIGHT * j, _arr[2], _arr[3] > MAX_HEIGHT * (j + 1) ? MAX_HEIGHT * (j + 1) : _arr[3]);

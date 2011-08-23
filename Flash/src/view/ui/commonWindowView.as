@@ -1,13 +1,11 @@
 ﻿package src.view.ui 
 {
-	import com.greensock.TweenLite;
-	import flash.display.SimpleButton;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.filters.DropShadowFilter;
-	import flash.filters.GlowFilter;
-	import flash.text.TextField;
-	import lib.component.window.windowBaseView;
+  import com.greensock.TweenLite;
+  import flash.display.SimpleButton;
+  import flash.events.Event;
+  import flash.events.MouseEvent;
+  import flash.text.TextField;
+  import lib.component.window.windowBaseView;
 	
 	/**
 	 * 显示节点详细数据

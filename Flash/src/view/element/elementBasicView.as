@@ -4,7 +4,6 @@
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.filters.GlowFilter;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -18,7 +17,6 @@
 		public static var COLOR_GROUP:Object = {};
 		
 		protected static const _RADIUS:uint = 4;
-		//protected static const _GLOW_FILTER:GlowFilter = new GlowFilter(0xff9999, .6, 4, 4);
 		protected static const _TF:TextFormat = new TextFormat(null, 12, 0xffffff);
 		
 		protected static var _UNIT:int = 1000;
@@ -75,12 +73,10 @@
 		 * methods
 		 * ************/
 		public function mouseOnHandler(evt:MouseEvent = null, num:int = 0):void { 
-			//alpha = 1;
-			//filters = [_GLOW_FILTER];
+      
 		}
 		public function mouseOutHandler(evt:MouseEvent = null, num:int = 0):void { 
-			//alpha = .8;
-			//filters = [];
+      
 		}
 		public function draw():void {
 			

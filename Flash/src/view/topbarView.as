@@ -9,12 +9,12 @@
 	import com.bit101.components.Style;
 	import com.bit101.components.Text;
 	import com.greensock.TweenLite;
+  import effects.DisplayUtils;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
-	import flash.filters.DropShadowFilter;
 	import flash.text.TextField;
 	import lib.event.searchEvent;
 	import src.event.mapEvent;
@@ -25,8 +25,6 @@
 	 */
 	public class topbarView extends Sprite
 	{
-		public static const _FILTER:DropShadowFilter = new DropShadowFilter(4, 45, 0x000000, .6);
-		
 		private const _default:Array = ['detail.zol.com.cn', 'mobile.zol.com.cn', 'nb.zol.com.cn', 'diy.zol.com.cn', 'dcdv.zol.com.cn'];
 		private const _tip:String = '请在此输入您要查看的起始页面地址，支持正则';
 		
@@ -124,7 +122,7 @@
 			_calendar.addEventListener(Event.SELECT, setDate);
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedHandler);
-			filters = [_FILTER];
+			filters = [DisplayUtils.SHADOW];
 		}
 		private function addedHandler(evt:Event):void {
 			resizeHandler();

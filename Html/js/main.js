@@ -10,6 +10,9 @@
  */
 var ui = {
   interval: 0,
+  rec: '',
+  ab: '',
+  date: '',
   init : function () {
     // 日期选项
     $('#date')
@@ -38,6 +41,15 @@ var ui = {
         })
       });
     });
+    $('#topbar .url').click(function (evt) {
+      if ($('#panel').css('display') == 'none') {
+        $('#panel').fadeIn();
+        $(this).attr('title', '关闭选项面板');
+      } else {
+        $('#panel').fadeOut();
+        $(this).attr('title', '点击修改参数');
+      }
+    });
     // 侦听iframe onload事件
     if ($.browser.msie) {
       var _ifr = $('#page')[0];
@@ -53,7 +65,10 @@ var ui = {
       return;
     }
     // 在iframe中加载页面
-    $('#page').attr('src', '../cgi-bin/page_filter.cgi?page=' + target + '&ab=' + $('#ab').val() + '&d=' + $('#date').val());
+    if (target != ui.rec || $('#ab').val() != ui.ab || $('#date').val() != ui.date) {
+      ui.rec = target, ui.ab = $('#ab').val(), ui.date = $('#date').val();
+      $('#page').attr('src', '../cgi-bin/page_filter.cgi?page=' + ui.rec + '&ab=' + ui.ab + '&d=' + ui.date);
+    }
     // 插入flash
     var flashVars = {
       r: target,
@@ -71,15 +86,7 @@ var ui = {
     $('#panel').fadeOut();
     // 显示状态条
     $('#topbar').slideDown();
-    $('#topbar .url').html($('#url').val()).click(function (evt) {
-      if ($('#panel').css('display') == 'none') {
-        $('#panel').fadeIn();
-        $(this).attr('title', '关闭选项面板');
-      } else {
-        $('#panel').fadeOut();
-        $(this).attr('title', '点击修改参数');
-      }
-    });
+    $('#topbar .url').html($('#url').val());
     // 显示侧边控制栏
     // 显示iframe等
     $('#con, #map_con').removeClass('hide');
