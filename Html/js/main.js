@@ -58,12 +58,13 @@ var ui = {
     $('#url').keydown(ui.onKeyDown);
   },
   createHeatMap : function () {
-    var target = $('#url').val();
+    var target = utils.correctURL($('#url').val());
     if (target == '' || target == 'http://') {
       alert('目标Url输入错误');
       $('#url').addClass('ui-state-error').focus();
       return;
     }
+    $('#url').html(target);
     // 在iframe中加载页面
     if (target != ui.rec || $('#ab').val() != ui.ab || $('#date').val() != ui.date) {
       ui.rec = target, ui.ab = $('#ab').val(), ui.date = $('#date').val();
@@ -86,7 +87,7 @@ var ui = {
     $('#panel').fadeOut();
     // 显示状态条
     $('#topbar').slideDown();
-    $('#topbar .url').html($('#url').val());
+    $('#topbar .url').html(target);
     // 显示侧边控制栏
     // 显示iframe等
     $('#con, #map_con').removeClass('hide');
@@ -117,6 +118,32 @@ var ui = {
     $('#page, #cover').height(_h);
   }
 }
-
+var utils = {
+  /**
+   * 这个函数用来检查url输入的合法性，并自动更正
+   * 1 是否正确包含http://
+   * 2 是否包含2个http://
+   * 3 是否使用/结尾
+   * @author Meathill
+   * @version 0.1(2011-08-25)
+   * @param {String} url 用户输入的url
+   * @return {String} 验证并自动更正后的url
+   */
+  correctURL : function (url) {
+    // 是否正确包含http://
+    if (url.substr(0, 7) != 'http://') {
+      url = 'http://' + url;
+    }
+    // 是否包含2个http://
+    url = url.replace(/(https?:\/\/)+/, '$1');
+    // 是否使用/结尾
+    var tail =url.substr(url.lastIndexOf('/') + 1); 
+    if (tail.indexOf('?') == -1 && tail.charAt(tail.length - 1) != '/') {
+      url += '/';
+    }
+    return url;
+  }
+  
+}
 // 自动运行
 $(ui.init);
