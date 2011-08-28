@@ -64,7 +64,7 @@ var ui = {
       $('#url').addClass('ui-state-error').focus();
       return;
     }
-    $('#url').html(target);
+    $('#url').val(target);
     // 在iframe中加载页面
     if (target != ui.rec || $('#ab').val() != ui.ab || $('#date').val() != ui.date) {
       ui.rec = target, ui.ab = $('#ab').val(), ui.date = $('#date').val();
@@ -137,8 +137,12 @@ var utils = {
     // 是否包含2个http://
     url = url.replace(/(https?:\/\/)+/, '$1');
     // 是否使用/结尾
-    var tail =url.substr(url.lastIndexOf('/') + 1); 
-    if (tail.indexOf('?') == -1 && tail.charAt(tail.length - 1) != '/') {
+    // http://detail.zol.com.cn/cell_phone/index227845.shtml
+    // http://detail.zol.com.cn/cell_phone/index227845.php?id=1
+    // http://detail.zol.com.cn/cell_phone
+    // http://detail.zol.com.cn
+    var tail = url.substr(url.lastIndexOf('/') + 1); 
+    if (tail != '' && tail.match(/\.(s?html?|php|asp)/) == null && tail.charAt(tail.length - 1) != '/') {
       url += '/';
     }
     return url;

@@ -1,19 +1,18 @@
 package brunch.clickHeatMap 
 {
-	import brunch.clickHeatMap.model.dataModel;
-	import brunch.clickHeatMap.view.controlPanelView;
-	import brunch.clickHeatMap.view.dataPanel;
-	import brunch.clickHeatMap.view.mapView;
-	import com.greensock.TweenLite;
-	import com.zol.basicMain;
-	import flash.display.SimpleButton;
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.MouseEvent;
-	import flash.events.ProgressEvent;
-	import flash.text.TextField;
-	import lib.component.loadingView;
-	import lib.meatClass.utils.meatMath;
+  import brunch.clickHeatMap.model.dataModel;
+  import brunch.clickHeatMap.view.map.dataPanel;
+  import brunch.clickHeatMap.view.map.mapView;
+  import brunch.clickHeatMap.view.panel.controlPanelView;
+  import com.zol.basicMain;
+  import flash.display.SimpleButton;
+  import flash.events.Event;
+  import flash.events.IOErrorEvent;
+  import flash.events.MouseEvent;
+  import flash.events.ProgressEvent;
+  import flash.text.TextField;
+  import lib.component.loadingView;
+  import lib.meatClass.utils.meatMath;
 	
 	/**
 	 * 点击热图生成工具
@@ -62,20 +61,21 @@ package brunch.clickHeatMap
 			_loading = loadingView(getChildAt(2));
 			_loading.x = stage.stageWidth - 50 >> 1;
 			
-			_help_mc = getChildAt(1) as controlPanelView;
-			_help_mc.x = stage.stageWidth - 260;
-			_help_mc.toggleHelp();
+			_help_mc = getChildAt(0) as controlPanelView;
+			_help_mc.x = stage.stageWidth - _help_mc.width;
 			_help_mc.addEventListener(Event.CHANGE, onStageResize);
 			_help_mc.addEventListener(Event.RESIZE, onLimitResize);
 			
-			_help_btn = getChildAt(0) as SimpleButton;
-			_help_btn.x = stage.stageWidth - 40; 
+			_help_btn = removeChildAt(1) as SimpleButton;
+			_help_btn.x = stage.stageWidth - _help_btn.width; 
 			_help_btn.addEventListener(MouseEvent.CLICK, _help_mc.toggleHelp);
 			
 			stage.addEventListener(Event.RESIZE, onStageResize);
 		}
 		private function onLoadFailed(evt:IOErrorEvent):void {
 			_loading_txt.text = '加载失败，请检查URL是否有效';
+      removeChild(_loading);
+      removeChild(_help_mc);
 		}
 		private function onDataLoading(evt:ProgressEvent):void {
 			if (evt.bytesTotal != 0) {
