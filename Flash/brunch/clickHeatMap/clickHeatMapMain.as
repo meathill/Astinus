@@ -62,14 +62,13 @@ package brunch.clickHeatMap
 			_loading = loadingView(getChildAt(2));
 			_loading.x = stage.stageWidth - 50 >> 1;
 			
-			_help_mc = getChildAt(1) as controlPanelView;
-			_help_mc.x = stage.stageWidth - 260;
-			_help_mc.toggleHelp();
+			_help_mc = getChildAt(0) as controlPanelView;
+			_help_mc.x = stage.stageWidth - _help_mc.width;
 			_help_mc.addEventListener(Event.CHANGE, onStageResize);
 			_help_mc.addEventListener(Event.RESIZE, onLimitResize);
 			
-			_help_btn = getChildAt(0) as SimpleButton;
-			_help_btn.x = stage.stageWidth - 40; 
+			_help_btn = removeChildAt(1) as SimpleButton;
+			_help_btn.x = stage.stageWidth - _help_btn.width; 
 			_help_btn.addEventListener(MouseEvent.CLICK, _help_mc.toggleHelp);
 			
 			stage.addEventListener(Event.RESIZE, onStageResize);

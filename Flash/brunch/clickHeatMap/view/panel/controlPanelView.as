@@ -1,9 +1,10 @@
-package brunch.clickHeatMap.view 
+package brunch.clickHeatMap.view.panel 
 {
 	import com.bit101.components.InputText;
 	import com.bit101.components.PushButton
 	import com.bit101.components.Style;
 	import com.greensock.TweenLite;
+  import effects.DisplayUtils;
 	import flash.display.SimpleButton;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -93,7 +94,6 @@ package brunch.clickHeatMap.view
 			_tri_btn.buttonMode = true;
 			_tri_btn.addEventListener(MouseEvent.MOUSE_DOWN, dragStart);
 			
-			
 			Style.BACKGROUND = 0xffffff;
 			_x_txt = new InputText(this, 120, 80, '0');
 			_y_txt = new InputText(this, 180, 80, '0');
@@ -103,6 +103,8 @@ package brunch.clickHeatMap.view
       
       // 默认从点击数>2的绘制
       limit = 3;
+      
+      filters = [DisplayUtils.SHADOW];
 			
 			addEventListener(FocusEvent.FOCUS_IN, onFocus);
 		}

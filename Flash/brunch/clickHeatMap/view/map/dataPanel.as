@@ -1,4 +1,4 @@
-package brunch.clickHeatMap.view 
+package brunch.clickHeatMap.view.map 
 {
 	import com.bit101.components.Accordion;
 	import com.bit101.components.Label;

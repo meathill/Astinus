@@ -1,4 +1,4 @@
-package brunch.clickHeatMap.view 
+package brunch.clickHeatMap.view.map 
 {
 	import flash.display.SimpleButton;
 	import flash.display.Sprite;

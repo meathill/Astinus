@@ -7,6 +7,6 @@ package effects {
    */
   public class DisplayUtils {
     public static const GLOW:GlowFilter = new GlowFilter(0xff0000, .6, 8, 8);
-		public static const SHADOW:DropShadowFilter = new DropShadowFilter(4, 45, 0x000000, .6);
+		public static const SHADOW:DropShadowFilter = new DropShadowFilter(2, 45, 0x000000, .6, 2, 2);
   }
 }
