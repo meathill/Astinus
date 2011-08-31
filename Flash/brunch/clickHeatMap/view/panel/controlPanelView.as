@@ -18,19 +18,27 @@ package brunch.clickHeatMap.view.panel {
 	 * @version	0.1(2011-02-22)
 	 */
 	public class controlPanelView extends Sprite {
+    //=========================================================================
+    // Constructor
+    //=========================================================================
+    /**
+     * create a instance of <code>controlPanelView</code>
+     */
+		public function controlPanelView() {
+			init();
+		}
+		//=========================================================================
+    // Variables
+    //=========================================================================
 		private var maxTextField:TextField;
 		private var colorbar:SimpleButton;
 		private var stepper:LowLimitStepper;
 		private var offsetX:InputText;
 		private var offsetY:InputText;
-		
-		public function controlPanelView() {
-			init();
-		}
-		
-		/************
-		 * properties
-		 * *********/
+    private var closeButton:SimpleButton;
+		//=========================================================================
+    // Properties
+    //=========================================================================
 		public function set max(num:int):void {
 			maxTextField.text = num.toString();
 			stepper.max = num;
@@ -61,11 +69,9 @@ package brunch.clickHeatMap.view.panel {
       maxTextField.text = stepper.max.toString();
       setLevel();
     }
-    
-		
-		/************
-		 * functions
-		 * *********/
+    //=========================================================================
+    // Private methods
+    //=========================================================================
 		private function init():void {
 			stepper = new LowLimitStepper(Sprite(getChildAt(numChildren-1)));
 			stepper.editable = false;
@@ -78,6 +84,9 @@ package brunch.clickHeatMap.view.panel {
 			colorbar = SimpleButton(getChildAt(numChildren - 3));
 			colorbar.addEventListener(MouseEvent.CLICK, setLevel);
 			colorbar.mouseEnabled = false;
+      
+      closeButton = SimpleButton(getChildAt(2));
+      closeButton.addEventListener(MouseEvent.CLICK, toggleHelp);
 			
 			Style.BACKGROUND = 0xF1F1F1;
 			offsetX = new InputText(this, 95, 120, '0');
@@ -93,6 +102,20 @@ package brunch.clickHeatMap.view.panel {
 			
 			addEventListener(FocusEvent.FOCUS_IN, onFocus);
 		}
+		//=========================================================================
+    // Public Methods
+    //=========================================================================
+		public function toggleHelp(evt:MouseEvent = null):void {
+			if (visible) {
+				TweenLite.to(this, .6, { x:stage.stageWidth, onComplete:onFadeOut );
+			} else {
+				visible = true;
+				TweenLite.to(this, .6, { x:stage.stageWidth - width } );
+			}
+		}
+    //=========================================================================
+    // Event Handlers
+    //=========================================================================
 		private function onKeyDown(evt:KeyboardEvent):void {
 			switch(evt.keyCode) {
 				case Keyboard.LEFT:
@@ -121,17 +144,8 @@ package brunch.clickHeatMap.view.panel {
 		private function onStepperChange(evt:Event):void {
 			dispatchEvent(new Event(Event.RESIZE));
 		}
-		
-		/************
-		 * methods
-		 * *********/
-		public function toggleHelp(evt:MouseEvent = null):void {
-			if (visible) {
-				TweenLite.to(this, .6, { x:stage.stageWidth, onComplete:function() { visible = false } } );
-			} else {
-				visible = true;
-				TweenLite.to(this, .6, { x:stage.stageWidth - width } );
-			}
-		}
+    private function onFadeOut():void {
+      dispatchEvent(new Event(Event.CLOSE));
+    }
 	}
 }

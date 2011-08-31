@@ -5,7 +5,7 @@ package brunch.clickHeatMap.view.panel {
 	import lib.component.numStepper.NumStepperBase;
 	
 	/**
-   * 鏁板�兼杩涘櫒
+   * 数值步进器
    * @author Meathill
    */
   public class LowLimitStepper extends NumStepperBase {

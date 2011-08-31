@@ -1,5 +1,5 @@
-package brunch.clickHeatMap 
-{
+package brunch.clickHeatMap {
+  import brunch.clickHeatMap.controller.GUI;
   import brunch.clickHeatMap.model.dataModel;
   import brunch.clickHeatMap.view.map.dataPanel;
   import brunch.clickHeatMap.view.map.mapView;
@@ -19,23 +19,30 @@ package brunch.clickHeatMap
 	 * 是用户访问路径的一个子集
 	 * 所以建了一个所谓的brunch包
 	 * 现在接近凌晨1点，脑子不是很清楚，先这么着吧
+   * 
+   * 更新，重构，将新学的东西融进去
 	 * @author	Meathill
-	 * @version 0.1(2011-02-18)
+	 * @version 0.2(2011-08-31)
 	 */
-	public class clickHeatMapMain extends basicMain
-	{
-		private var _data:dataModel;
-		private var _loading_txt:TextField;
-		private var _help_btn:SimpleButton;
-		private var _help_mc:controlPanelView;
-		private var _map:mapView;
-		private var _loading:loadingView;
-		
-		public function clickHeatMapMain() 
-		{
+	public class clickHeatMapMain extends basicMain	{
+		//=========================================================================
+    // Constructor
+    //=========================================================================
+		public function clickHeatMapMain() {
 			super();
 		}
-		
+		//=========================================================================
+    // Variables
+    //=========================================================================
+		private var _data:dataModel;
+		private var _loading_txt:TextField;
+		private var _map:mapView;
+		private var _loading:loadingView;
+    //=========================================================================
+    // Properties
+    //=========================================================================
+		public var helpButton:SimpleButton;
+		public var optionsPanel:controlPanelView;
 		/************
 		 * functions
 		 * *********/
@@ -49,6 +56,8 @@ package brunch.clickHeatMap
 			_data.addEventListener(IOErrorEvent.IO_ERROR, onLoadFailed);
 			_data.addEventListener(Event.CHANGE, onOffsetChange);
 			_data.load();
+      
+      GUI.main = this;
 			
 			dataPanel.remote = dataModel.URL;
 			dataPanel.search = _data.getParam().r;
@@ -61,21 +70,22 @@ package brunch.clickHeatMap
 			_loading = loadingView(getChildAt(2));
 			_loading.x = stage.stageWidth - 50 >> 1;
 			
-			_help_mc = getChildAt(0) as controlPanelView;
-			_help_mc.x = stage.stageWidth - _help_mc.width;
-			_help_mc.addEventListener(Event.CHANGE, onStageResize);
-			_help_mc.addEventListener(Event.RESIZE, onLimitResize);
+			optionsPanel = getChildAt(0) as controlPanelView;
+			optionsPanel.x = stage.stageWidth - optionsPanel.width;
+			optionsPanel.addEventListener(Event.CHANGE, onStageResize);
+			optionsPanel.addEventListener(Event.RESIZE, onLimitResize);
+      optionsPanel.addEventListener(Event.CLOSE, GUI.switchButtonPanel);
 			
-			_help_btn = removeChildAt(1) as SimpleButton;
-			_help_btn.x = stage.stageWidth - _help_btn.width; 
-			_help_btn.addEventListener(MouseEvent.CLICK, _help_mc.toggleHelp);
+			helpButton = removeChildAt(1) as SimpleButton;
+			helpButton.x = stage.stageWidth - helpButton.width; 
+			helpButton.addEventListener(MouseEvent.CLICK, optionsPanel.toggleHelp);
 			
 			stage.addEventListener(Event.RESIZE, onStageResize);
 		}
 		private function onLoadFailed(evt:IOErrorEvent):void {
 			_loading_txt.text = '加载失败，请检查URL是否有效';
       removeChild(_loading);
-      removeChild(_help_mc);
+      removeChild(optionsPanel);
 		}
 		private function onDataLoading(evt:ProgressEvent):void {
 			if (evt.bytesTotal != 0) {
@@ -101,14 +111,14 @@ package brunch.clickHeatMap
 			_data.removeEventListener(Event.COMPLETE, startDrawMap);
 			_data.removeEventListener(ProgressEvent.PROGRESS, onDataParsing);
 			
-			_help_mc.max = _data.max;
+			optionsPanel.max = _data.max;
 			
 			// 将地图宽度限制在1680以下，如此高度起码可以达到9600高
 			_map = new mapView(stage.stageWidth > mapView.MAX_WIDTH ? mapView.MAX_WIDTH : stage.stageWidth, _data.pageHeight);
 			_map.x = stage.stageWidth - _map.width >> 1;
 			_map.data = _data;
 			_map.addEventListener(Event.COMPLETE, onMapComplete);
-			_map.draw(_data.top.concat(), _data.max, _help_mc.limit);
+			_map.draw(_data.top.concat(), _data.max, optionsPanel.limit);
 			addChildAt(_map, 0);
 		}
 		private function onMapComplete(evt:Event):void {
@@ -118,14 +128,14 @@ package brunch.clickHeatMap
 			_data.startWatchScroll();
 		}
 		private function onLimitResize(evt:Event):void {
-			_map.limit = _help_mc.limit;
+			_map.limit = optionsPanel.limit;
 		}
 		private function onOffsetChange(evt:Event):void {
-			_map.y = -_data.offset + _help_mc.toY;
+			_map.y = -_data.offset + optionsPanel.toY;
 		}
 		private function onStageResize(evt:Event):void {			
 			if (_map != null) {
-				_map.x = (stage.stageWidth - _map.width >> 1) + _help_mc.toX;
+				_map.x = (stage.stageWidth - _map.width >> 1) + optionsPanel.toX;
 			}
 		}
 	}
