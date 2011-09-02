@@ -3,7 +3,7 @@ package brunch.clickHeatMap {
   import brunch.clickHeatMap.model.dataModel;
   import brunch.clickHeatMap.map.dataPanel;
   import brunch.clickHeatMap.map.mapView;
-  import brunch.clickHeatMap.panel.controlPanelView;
+  import brunch.clickHeatMap.panel.ControlPanelView;
   import com.zol.basicMain;
   import flash.display.SimpleButton;
   import flash.events.Event;
@@ -42,7 +42,7 @@ package brunch.clickHeatMap {
     // Properties
     //=========================================================================
 		public var helpButton:SimpleButton;
-		public var optionsPanel:controlPanelView;
+		public var optionsPanel:ControlPanelView;
 		/************
 		 * functions
 		 * *********/
@@ -70,10 +70,9 @@ package brunch.clickHeatMap {
 			_loading = loadingView(getChildAt(2));
 			_loading.x = stage.stageWidth - 50 >> 1;
 			
-			optionsPanel = getChildAt(0) as controlPanelView;
+			optionsPanel = getChildAt(0) as ControlPanelView;
       optionsPanel.enabled = false;
-      trace(stage.stageWidth, optionsPanel.width);
-			optionsPanel.x = stage.stageWidth - optionsPanel.width;
+			optionsPanel.x = stage.stageWidth - ControlPanelView.WIDTH;
 			optionsPanel.addEventListener(Event.CHANGE, onStageResize);
 			optionsPanel.addEventListener(Event.RESIZE, onLimitResize);
       optionsPanel.addEventListener(Event.CLOSE, GUI.switchButtonPanel);
@@ -144,7 +143,7 @@ package brunch.clickHeatMap {
         helpButton.x = stage.stageWidth - helpButton.width;
       }
       if (optionsPanel.visible) {
-        optionsPanel.x = stage.stageWidth - helpButton.width;
+        optionsPanel.x = stage.stageWidth - ControlPanelView.WIDTH;
       }
 		}
 	}

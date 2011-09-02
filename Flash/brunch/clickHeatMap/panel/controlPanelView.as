@@ -1,4 +1,5 @@
 package brunch.clickHeatMap.panel {
+  import com.adobe.utils.ArrayUtil;
   import com.bit101.components.InputText;
   import com.bit101.components.Style;
   import effects.DisplayUtils;
@@ -16,14 +17,18 @@ package brunch.clickHeatMap.panel {
 	 * @author	Meathill
 	 * @version	0.1(2011-02-22)
 	 */
-	public class controlPanelView extends Sprite {
+	public class ControlPanelView extends Sprite {
+    //=========================================================================
+    // Class Static Constants
+    //=========================================================================
+    public static const WIDTH:int = 220;
     //=========================================================================
     // Constructor
     //=========================================================================
     /**
-     * create a instance of <code>controlPanelView</code>
+     * create a instance of <code>ControlPanelView</code>
      */
-		public function controlPanelView() {
+		public function ControlPanelView() {
 			init();
 		}
 		//=========================================================================
@@ -76,11 +81,11 @@ package brunch.clickHeatMap.panel {
     // Private methods
     //=========================================================================
 		private function init():void {
+      /*for (var i:int = 0; i < numChildren; i++) {
+        trace(i, getChildAt(i).x + getChildAt(i).width);
+      }*/
       closeButton = SimpleButton(getChildAt(numChildren - 1));
       closeButton.addEventListener(MouseEvent.CLICK, onClose);
-      
-			stepper = new LowLimitStepper(Sprite(getChildAt(numChildren-2)));
-			stepper.addEventListener(Event.CHANGE, onStepperChange);
 			
 			maxTextField = TextField(getChildAt(numChildren - 3));
 			maxTextField.mouseEnabled = false;
@@ -88,6 +93,10 @@ package brunch.clickHeatMap.panel {
 			colorbar = SimpleButton(getChildAt(numChildren - 4));
 			colorbar.addEventListener(MouseEvent.CLICK, setLevel);
 			colorbar.mouseEnabled = false;
+      
+			stepper = new LowLimitStepper(Sprite(getChildAt(numChildren - 2)));
+      stepper.bar = colorbar;
+			stepper.addEventListener(Event.CHANGE, onStepperChange);
 			
 			Style.BACKGROUND = 0xF1F1F1;
 			offsetX = new InputText(this, 95, 120, '0');
@@ -98,8 +107,6 @@ package brunch.clickHeatMap.panel {
       
       // 默认从点击数>2的绘制
       limit = 3;
-      
-      filters = [DisplayUtils.SHADOW];
 			
       onRemoved();
 		}
@@ -126,7 +133,8 @@ package brunch.clickHeatMap.panel {
 			}
 		}
     private function onAdded(evt:Event = null):void {
-      stage.focus = this;
+      /*stage.focus = this;
+      stage.focusRect = null;*/
       stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
       addEventListener(Event.REMOVED, onRemoved);
       removeEventListener(Event.ADDED_TO_STAGE, onAdded);

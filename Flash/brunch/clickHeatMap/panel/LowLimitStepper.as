@@ -12,6 +12,10 @@
    */
   public class LowLimitStepper extends NumStepperBase {
     //=========================================================================
+    // Class Static Constants
+    //=========================================================================
+    public static const HEIGHT:int = 17;
+    //=========================================================================
     // Constructor
     //=========================================================================
     /**
@@ -52,8 +56,8 @@
       draw();
       move();
     }
-    public var left:int = 5;
-    public var right:int = 235;
+    public var left:int = 8;
+    public var right:int = 214;
     public var bar:DisplayObject;
     // ========================================================================
     // Variables
@@ -65,7 +69,8 @@
     //=========================================================================
     override protected function changeNum(evt:MouseEvent):void {
       super.changeNum(evt);
-      
+      draw();
+      move();
     }
     //=========================================================================
     // Protected Functions
@@ -74,13 +79,13 @@
       target.graphics.clear();
       target.graphics.lineStyle(2, 0x333333);
       target.graphics.beginFill(0xFFFFFF);
-      target.graphics.drawRoundRect(0, 0, width + 4, height + 4, 3, 3);
+      target.graphics.drawRoundRect(0, 5, plusButton.width + plusButton.x + 3, HEIGHT, 2, 2);
       target.graphics.endFill();
     }
     protected function move():void {
-      var num:int = int(_num_txt.text);
-      x = (right - left - width) * (num - min)  / (max - min) + left;
-      var pointTo:int = bar.width * (num-min) / (max - min) + bar.x;
+      var num:int = int(numTextField.text);
+      x = (right - left - target.width) * (num - min)  / (max - min) + left;
+      var pointTo:int = bar.width * (num - min) / (max - min) + bar.x;
       triangle.x = pointTo - (triangle.width >> 1) - x; 
     }
   }
