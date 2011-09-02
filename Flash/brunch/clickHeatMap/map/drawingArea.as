@@ -1,10 +1,10 @@
-package brunch.clickHeatMap.view.map 
+package brunch.clickHeatMap.map 
 {
-	import flash.display.SimpleButton;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
-	import flash.text.TextField;
-	import flash.text.TextFieldAutoSize;
+  import flash.display.SimpleButton;
+  import flash.display.Sprite;
+  import flash.events.MouseEvent;
+  import flash.text.TextField;
+  import flash.text.TextFieldAutoSize;
 	
 	/**
 	 * 绘制区域示意图

@@ -1,5 +1,6 @@
 package brunch.clickHeatMap.controller {
   import brunch.clickHeatMap.clickHeatMapMain;
+  import com.greensock.TweenLite;
   import effects.DisplayUtils;
   import flash.events.Event;
 	/**
@@ -16,7 +17,21 @@ package brunch.clickHeatMap.controller {
     // Class Public Methods
     //=========================================================================
     public static function switchButtonPanel(evt:Event):void {
-      DisplayUtils.toggleMC(main.helpButton, main.optionsPanel);
+      if (main.contains(main.helpButton)) {
+        main.addChild(main.optionsPanel);
+        TweenLite.to(main.optionsPanel, .6, { x: main.stage.stageWidth - main.optionsPanel.width } );
+        main.removeChild(main.helpButton);
+      } else if (main.contains(main.optionsPanel)) {
+        TweenLite.to(main.optionsPanel, .6, { x:main.stage.stageWidth, onComplete: OnButtonSwitched } );
+        
+      }
+    }
+    //=========================================================================
+    // Class Private Functions
+    //=========================================================================
+    private static function OnButtonSwitched():void {
+      main.removeChild(main.optionsPanel);
+      main.addChild(main.helpButton);
     }
   }
 }

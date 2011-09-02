@@ -1,4 +1,4 @@
-package brunch.clickHeatMap.view.map 
+package brunch.clickHeatMap.map 
 {
 	import brunch.clickHeatMap.model.dataModel;
 	import flash.display.Bitmap;

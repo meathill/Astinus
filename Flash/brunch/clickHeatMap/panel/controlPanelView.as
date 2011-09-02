@@ -1,7 +1,6 @@
-package brunch.clickHeatMap.view.panel {
+package brunch.clickHeatMap.panel {
   import com.bit101.components.InputText;
   import com.bit101.components.Style;
-  import com.greensock.TweenLite;
   import effects.DisplayUtils;
   import flash.display.SimpleButton;
   import flash.display.Sprite;
@@ -69,28 +68,30 @@ package brunch.clickHeatMap.view.panel {
       maxTextField.text = stepper.max.toString();
       setLevel();
     }
+    public function set enabled(bl:Boolean):void {
+      mouseChildren = mouseEnabled = bl;
+      filters = bl ? null : [DisplayUtils.BLUR];
+    }
     //=========================================================================
     // Private methods
     //=========================================================================
 		private function init():void {
-			stepper = new LowLimitStepper(Sprite(getChildAt(numChildren-1)));
-			stepper.editable = false;
-			stepper.autoSize = true;
+      closeButton = SimpleButton(getChildAt(numChildren - 1));
+      closeButton.addEventListener(MouseEvent.CLICK, onClose);
+      
+			stepper = new LowLimitStepper(Sprite(getChildAt(numChildren-2)));
 			stepper.addEventListener(Event.CHANGE, onStepperChange);
 			
-			maxTextField = TextField(getChildAt(numChildren - 2));
+			maxTextField = TextField(getChildAt(numChildren - 3));
 			maxTextField.mouseEnabled = false;
 			
-			colorbar = SimpleButton(getChildAt(numChildren - 3));
+			colorbar = SimpleButton(getChildAt(numChildren - 4));
 			colorbar.addEventListener(MouseEvent.CLICK, setLevel);
 			colorbar.mouseEnabled = false;
-      
-      closeButton = SimpleButton(getChildAt(2));
-      closeButton.addEventListener(MouseEvent.CLICK, toggleHelp);
 			
 			Style.BACKGROUND = 0xF1F1F1;
 			offsetX = new InputText(this, 95, 120, '0');
-			offsetY = new InputText(this, 95, 120, '0');
+			offsetY = new InputText(this, 158, 120, '0');
 			offsetX.setSize(30, 20);
 			offsetY.setSize(30, 20);
 			offsetX.restrict = offsetY.restrict = '\-0-9';
@@ -105,14 +106,6 @@ package brunch.clickHeatMap.view.panel {
 		//=========================================================================
     // Public Methods
     //=========================================================================
-		public function toggleHelp(evt:MouseEvent = null):void {
-			if (visible) {
-				TweenLite.to(this, .6, { x:stage.stageWidth, onComplete:onFadeOut );
-			} else {
-				visible = true;
-				TweenLite.to(this, .6, { x:stage.stageWidth - width } );
-			}
-		}
     //=========================================================================
     // Event Handlers
     //=========================================================================
@@ -144,7 +137,7 @@ package brunch.clickHeatMap.view.panel {
 		private function onStepperChange(evt:Event):void {
 			dispatchEvent(new Event(Event.RESIZE));
 		}
-    private function onFadeOut():void {
+    private function onClose(evt:MouseEvent):void {
       dispatchEvent(new Event(Event.CLOSE));
     }
 	}

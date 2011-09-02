@@ -1,15 +1,15 @@
-package brunch.clickHeatMap.view.map 
+package brunch.clickHeatMap.map 
 {
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
+  import effects.DisplayUtils;
+  import flash.display.DisplayObject;
+  import flash.display.Sprite;
   import flash.events.ContextMenuEvent;
   import flash.net.navigateToURL;
   import flash.net.URLRequest;
-	import flash.text.TextField;
-	import flash.text.TextFieldAutoSize;
-	import flash.ui.ContextMenu;
-	import flash.ui.ContextMenuItem;
-  import effects.DisplayUtils;
+  import flash.text.TextField;
+  import flash.text.TextFieldAutoSize;
+  import flash.ui.ContextMenu;
+  import flash.ui.ContextMenuItem;
 	
 	/**
 	 * 当前链接提示窗

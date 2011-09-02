@@ -1,15 +1,15 @@
-package brunch.clickHeatMap.view.map 
+package brunch.clickHeatMap.map 
 {
-	import com.bit101.components.Accordion;
-	import com.bit101.components.Label;
-	import com.bit101.components.List;
-	import com.bit101.components.Style;
-	import com.bit101.components.VBox;
-	import com.bit101.components.Window;
-	import flash.display.DisplayObjectContainer;
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import lib.component.data.dataBasicModel;
+  import com.bit101.components.Accordion;
+  import com.bit101.components.Label;
+  import com.bit101.components.List;
+  import com.bit101.components.Style;
+  import com.bit101.components.VBox;
+  import com.bit101.components.Window;
+  import flash.display.DisplayObjectContainer;
+  import flash.events.Event;
+  import flash.events.IOErrorEvent;
+  import lib.component.data.dataBasicModel;
 	
 	/**
 	 * 数据分析维度面板
