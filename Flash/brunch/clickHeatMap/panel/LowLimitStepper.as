@@ -1,6 +1,8 @@
 ﻿package brunch.clickHeatMap.panel {
+  import flash.display.DisplayObject;
   import flash.display.SimpleButton;
   import flash.display.Sprite;
+  import flash.events.MouseEvent;
   import flash.text.TextField;
 	import lib.component.numStepper.NumStepperBase;
 	
@@ -23,6 +25,7 @@
       autoSize = true;
       editable = false;
       this.target = target;
+      this.triangle = target.getChildAt(3);
       draw();
     }
     //=========================================================================
@@ -43,17 +46,27 @@
     override public function get value():int {
       return super.value;
     }
-    override public function set value(value:int):void {
-      super.value = value;
+    override public function set value(num:int):void {
+      super.value = num;
       plusButton.x = numTextField.x + numTextField.width + 1;
       draw();
+      move();
     }
     public var left:int = 5;
     public var right:int = 235;
+    public var bar:DisplayObject;
     // ========================================================================
     // Variables
     // ========================================================================
     private var target:Sprite;
+    private var triangle:DisplayObject;
+    //=========================================================================
+    //  Override Protected Functions
+    //=========================================================================
+    override protected function changeNum(evt:MouseEvent):void {
+      super.changeNum(evt);
+      
+    }
     //=========================================================================
     // Protected Functions
     //=========================================================================
@@ -63,6 +76,12 @@
       target.graphics.beginFill(0xFFFFFF);
       target.graphics.drawRoundRect(0, 0, width + 4, height + 4, 3, 3);
       target.graphics.endFill();
+    }
+    protected function move():void {
+      var num:int = int(_num_txt.text);
+      x = (right - left - width) * (num - min)  / (max - min) + left;
+      var pointTo:int = bar.width * (num-min) / (max - min) + bar.x;
+      triangle.x = pointTo - (triangle.width >> 1) - x; 
     }
   }
 }

@@ -63,10 +63,10 @@ package brunch.clickHeatMap.panel {
       return stepper.value;
     }
     public function set limit(value:int):void {
+      if (value > int(maxTextField.text)) {
+        return ;
+      }
       stepper.value = value;
-      stepper.max = value > stepper.max ? value : stepper.max;
-      maxTextField.text = stepper.max.toString();
-      setLevel();
     }
     public function set enabled(bl:Boolean):void {
       mouseChildren = mouseEnabled = bl;
@@ -101,7 +101,7 @@ package brunch.clickHeatMap.panel {
       
       filters = [DisplayUtils.SHADOW];
 			
-			addEventListener(FocusEvent.FOCUS_IN, onFocus);
+      onRemoved();
 		}
 		//=========================================================================
     // Public Methods
@@ -121,16 +121,23 @@ package brunch.clickHeatMap.panel {
 					toY -= evt.ctrlKey ? 10 : 1;
 					break;
 				case Keyboard.DOWN:
-					toY += evt.ctrlKey ? 10:1;
+					toY += evt.ctrlKey ? 10 : 1;
 					break;
 			}
 		}
-		private function onFocus(evt:Event):void {
-			addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-		}
+    private function onAdded(evt:Event = null):void {
+      stage.focus = this;
+      stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+      addEventListener(Event.REMOVED, onRemoved);
+      removeEventListener(Event.ADDED_TO_STAGE, onAdded);
+    }
+    private function onRemoved(evt:Event = null):void {
+      stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+      addEventListener(Event.REMOVED, onAdded);
+      removeEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
+    }
 		private function setLevel(evt:MouseEvent = null):void {
-			//stepper.value = int((_tri_btn.x - colorbar.x + 6) / colorbar.width * int(maxTextField.text));
-			//stepper.x = colorbar.width * _limit / int(maxTextField.text) + colorbar.x - 6 + 6 - (stepper.width >> 1);
+			stepper.value = evt.localX / colorbar.width * int(maxTextField.text);
 			
 			dispatchEvent(new Event(Event.RESIZE));
 		}
