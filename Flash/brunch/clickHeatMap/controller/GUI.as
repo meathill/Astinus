@@ -1,5 +1,5 @@
 package brunch.clickHeatMap.controller {
-  import brunch.clickHeatMap.clickHeatMapMain;
+  import brunch.clickHeatMap.ClickHeatMapMain;
   import com.greensock.TweenLite;
   import effects.DisplayUtils;
   import flash.events.Event;
@@ -12,7 +12,7 @@ package brunch.clickHeatMap.controller {
     //=========================================================================
     // Class Variables
     //=========================================================================
-    public static var main:clickHeatMapMain;
+    public static var main:ClickHeatMapMain;
     //=========================================================================
     // Class Public Methods
     //=========================================================================

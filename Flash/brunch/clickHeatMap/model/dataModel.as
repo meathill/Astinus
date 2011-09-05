@@ -1,14 +1,12 @@
 package brunch.clickHeatMap.model 
 {
-	import flash.display.DisplayObject;
-	import flash.events.Event;
-	import flash.events.ProgressEvent;
-	import flash.external.ExternalInterface;
-	import flash.geom.Rectangle;
-	import flash.net.URLVariables;
-	import flash.utils.getTimer;
-	import lib.component.data.dataBasicModel;
-	import lib.component.data.dataModelType;
+  import flash.display.DisplayObject;
+  import flash.events.Event;
+  import flash.events.ProgressEvent;
+  import flash.external.ExternalInterface;
+  import flash.net.URLVariables;
+  import flash.utils.getTimer;
+  import lib.component.data.DataBasicModel;
 	
 	/**
 	 * 数据模型类
@@ -16,7 +14,7 @@ package brunch.clickHeatMap.model
 	 * @author	Meathill
 	 * @version	0.1(2011-02-22)
 	 */
-	public class dataModel extends dataBasicModel
+	public class DataModel extends DataBasicModel
 	{
 		public static const URL:String = 'http://area.zol.com.cn/cgi-bin/click_url.cgi';
 		public static const RATE:int = 1024; // 每帧计算的条数
@@ -30,7 +28,7 @@ package brunch.clickHeatMap.model
 		public var count:int = 0;
 		public var top:Vector.<Array>;
 		
-		public function dataModel() 
+		public function DataModel() 
 		{
 			super(URL);
 			_param = new URLVariables();
@@ -100,21 +98,6 @@ package brunch.clickHeatMap.model
 		/************
 		 * methods
 		 * *********/
-		/**
-		 * 从外部传值中取得参数，前面是测试用默认参数，取2011-02-17的经销商的数据
-		 * @param	obj
-		 */
-		public function makeParam(obj:Object) {
-			_param.r = 'http://dealer.zol.com.cn/';
-			//_param.r = 'http://mobile.zol.com.cn/';
-			_param.d = '110624';
-			_param.nocache = 0;
-			_param.visitor = 'new';
-			for (var prop:String in obj) {
-				trace(prop + ' : ' + obj[prop]);
-				_param[prop] = obj[prop];
-			}
-		}
 		public function getRectList(x:int = 0, y:int = 0, w:int = 0, h:int = 0, num:int = int.MAX_VALUE):Vector.<Array> {
 			var _result:Vector.<Array> = new Vector.<Array>();
 			for (var i:int = 0, len:int = top.length; i < len && _result.length < num; i += 1) {

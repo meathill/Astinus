@@ -1,5 +1,5 @@
-package brunch.clickHeatMap.map 
-{
+package brunch.clickHeatMap.map {
+  import brunch.clickHeatMap.model.ExternalModel;
   import com.bit101.components.Accordion;
   import com.bit101.components.Label;
   import com.bit101.components.List;
@@ -9,7 +9,7 @@ package brunch.clickHeatMap.map
   import flash.display.DisplayObjectContainer;
   import flash.events.Event;
   import flash.events.IOErrorEvent;
-  import lib.component.data.dataBasicModel;
+  import lib.component.data.DataBasicModel;
 	
 	/**
 	 * 数据分析维度面板
@@ -17,24 +17,18 @@ package brunch.clickHeatMap.map
 	 * @author	Meathill
 	 * @version	0.1(2011-03-22)
 	 */
-	public class dataPanel extends Accordion
-	{
-		public static var cw:int;
-		public static var date:String;
-		public static var search:String;
-		public static var remote:String;
-		
+	public class dataPanel extends Accordion {
 		public var pos:Array;
 		
-		private static const _DIMENSIONS:Vector.<String> = new < String > ['链接', '产品', '标题', '页面类型'];
-		private static const _TYPE:Vector.<String> = new < String > ['url', 'product', 'title', 'page_type'];
+		public static const DIMENSIONS:Vector.<String> = new < String > ['链接', '产品', '标题', '页面类型'];
+		public static const TYPE:Vector.<String> = new < String > ['url', 'product', 'title', 'page_type'];
 		
 		private var _url_list:List;
-		private var _data:dataBasicModel;
+		private var _data:DataBasicModel;
 		private var _cur:int = 0;
+    private var external:ExternalModel;
 		
-		public function dataPanel(parent:DisplayObjectContainer=null, xpos:Number=0, ypos:Number=0) 
-		{
+		public function dataPanel(parent:DisplayObjectContainer=null, xpos:Number=0, ypos:Number=0) {
 			super(parent, xpos, ypos);
 		}
 		
@@ -56,8 +50,9 @@ package brunch.clickHeatMap.map
 		 * *********/
 		override protected function init():void {
 			super.init();
+      external = ExternalModel.getInstance();
 			
-			_data = new dataBasicModel(remote);
+			_data = new DataBasicModel(external.remote);
 			_data.addEventListener(Event.COMPLETE, dataLoadComplete);
 			_data.addEventListener(IOErrorEvent.IO_ERROR, dataLoadFailed);
 		}
@@ -68,8 +63,8 @@ package brunch.clickHeatMap.map
 			_vbox.spacing = 0;
 
 			_windows = [];
-			for (var i:int = 0, len:int = _DIMENSIONS.length; i < len; i += 1)	{
-				var window:Window = new Window(_vbox, 0, 0, _DIMENSIONS[i]);
+			for (var i:int = 0, len:int = DIMENSIONS.length; i < len; i += 1)	{
+				var window:Window = new Window(_vbox, 0, 0, DIMENSIONS[i]);
 				window.grips.visible = false;
 				window.draggable = false;
 				window.addEventListener(Event.SELECT, onWindowSelect);
@@ -89,7 +84,7 @@ package brunch.clickHeatMap.map
 			
 			_cur = _windows.indexOf(window);
 			if (window.content.numChildren == 0) {
-				_data.param = 'r=' + search +'&d=' + date + '&select=' + pos.join('.') + '.' + _TYPE[_cur] + '&w=' + cw;
+				_data.paramStr = 'r=' + external.search +'&d=' + external.date + '&select=' + pos.join('.') + '.' + TYPE[_cur] + '&w=' + external.clientWidth;
 				_data.load();
 				new Label(window.content, 5, 5, '加载数据');
 				enabled = false;
