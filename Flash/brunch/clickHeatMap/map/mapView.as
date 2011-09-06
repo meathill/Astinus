@@ -1,27 +1,26 @@
 package brunch.clickHeatMap.map 
 {
-	import brunch.clickHeatMap.model.dataModel;
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.events.ProgressEvent;
-	import flash.geom.Rectangle;
-	import flash.utils.getTimer;
+  import brunch.clickHeatMap.model.DataModel;
+  import flash.display.Bitmap;
+  import flash.display.BitmapData;
+  import flash.display.Sprite;
+  import flash.events.Event;
+  import flash.events.MouseEvent;
+  import flash.geom.Rectangle;
+  import flash.utils.getTimer;
 	
 	/**
 	 * 绘图类
 	 * @author	Meathill
 	 * @version	0.1(2011-02-21)
 	 */
-	public class mapView extends Sprite
+	public class MapView extends Sprite
 	{
 		public static const RATE:int = 256;
 		public static const MAX_WIDTH:int = 1680;
 		public static const MAX_HEIGHT:int = 8000;
 		
-		public var data:dataModel;
+		public var data:DataModel;
 		
 		private const _HEAT:uint = 0x99000000;
 		
@@ -35,7 +34,7 @@ package brunch.clickHeatMap.map
 		private var _ori_x:int = 0, _ori_y:int = 0;
 		private var _width:int = 0, _height:int = 0;
 		
-		public function mapView(w:int = 100, h:int = 100) 
+		public function MapView(w:int = 100, h:int = 100) 
 		{
 			init(w, h);
 		}

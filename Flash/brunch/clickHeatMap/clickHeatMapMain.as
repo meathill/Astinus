@@ -1,8 +1,9 @@
 package brunch.clickHeatMap {
   import brunch.clickHeatMap.controller.GUI;
-  import brunch.clickHeatMap.model.dataModel;
+  import brunch.clickHeatMap.map.MapView;
+  import brunch.clickHeatMap.model.DataModel;
   import brunch.clickHeatMap.map.dataPanel;
-  import brunch.clickHeatMap.map.mapView;
+  import brunch.clickHeatMap.model.ExternalModel;
   import brunch.clickHeatMap.panel.ControlPanelView;
   import com.zol.basicMain;
   import flash.display.SimpleButton;
@@ -24,19 +25,20 @@ package brunch.clickHeatMap {
 	 * @author	Meathill
 	 * @version 0.2(2011-08-31)
 	 */
-	public class clickHeatMapMain extends basicMain	{
+	public class ClickHeatMapMain extends basicMain	{
 		//=========================================================================
     // Constructor
     //=========================================================================
-		public function clickHeatMapMain() {
+		public function ClickHeatMapMain() {
 			super();
 		}
 		//=========================================================================
     // Variables
     //=========================================================================
-		private var _data:dataModel;
+		private var data:DataModel;
+    private var external:ExternalModel;
 		private var _loading_txt:TextField;
-		private var _map:mapView;
+		private var _map:MapView;
 		private var _loading:loadingView;
     //=========================================================================
     // Properties
@@ -47,21 +49,20 @@ package brunch.clickHeatMap {
 		 * functions
 		 * *********/
 		override protected function dataInit(evt:Event = null):void {
-			_data = new dataModel();
-			_data.parent = this;
-			_data.clientWidth = dataPanel.cw = stage.stageWidth;
-			_data.makeParam(loaderInfo.parameters);
-			_data.addEventListener(ProgressEvent.PROGRESS, onDataLoading);
-			_data.addEventListener(Event.COMPLETE, loadDataComplete);
-			_data.addEventListener(IOErrorEvent.IO_ERROR, onLoadFailed);
-			_data.addEventListener(Event.CHANGE, onOffsetChange);
-			_data.load();
+      external = ExternalModel.getInstance(loaderInfo.parameters);
+			external.remote = DataModel.URL;
+      
+			data = new DataModel();
+			data.parent = this;
+      data.param = external.param;
+			data.clientWidth = external.clientWidth = stage.stageWidth;
+			data.addEventListener(ProgressEvent.PROGRESS, onDataLoading);
+			data.addEventListener(Event.COMPLETE, loadDataComplete);
+			data.addEventListener(IOErrorEvent.IO_ERROR, onLoadFailed);
+			data.addEventListener(Event.CHANGE, onOffsetChange);
+			data.load();
       
       GUI.main = this;
-			
-			dataPanel.remote = dataModel.URL;
-			dataPanel.search = _data.getParam().r;
-			dataPanel.date = _data.getParam().d;
 		}
 		override protected function displayInit(evt:Event = null):void {
 			_loading_txt = getChildAt(3) as TextField;
@@ -102,38 +103,38 @@ package brunch.clickHeatMap {
 			removeChild(_loading);
 			
 			_loading_txt.text = '开始分析数据，请稍候~~';
-			_data.removeEventListener(Event.COMPLETE, loadDataComplete);
-			_data.removeEventListener(ProgressEvent.PROGRESS, onDataLoading);
-			_data.addEventListener(Event.COMPLETE, startDrawMap);
-			_data.addEventListener(ProgressEvent.PROGRESS, onDataParsing);
+			data.removeEventListener(Event.COMPLETE, loadDataComplete);
+			data.removeEventListener(ProgressEvent.PROGRESS, onDataLoading);
+			data.addEventListener(Event.COMPLETE, startDrawMap);
+			data.addEventListener(ProgressEvent.PROGRESS, onDataParsing);
 		}
 		private function startDrawMap(evt:Event):void {
 			_loading_txt.text = '分析完毕，绘图中';
-			_data.removeEventListener(Event.COMPLETE, startDrawMap);
-			_data.removeEventListener(ProgressEvent.PROGRESS, onDataParsing);
+			data.removeEventListener(Event.COMPLETE, startDrawMap);
+			data.removeEventListener(ProgressEvent.PROGRESS, onDataParsing);
 			
-			optionsPanel.max = _data.max;
+			optionsPanel.max = data.max;
 			
 			// 将地图宽度限制在1680以下，如此高度起码可以达到9600高
-			_map = new mapView(stage.stageWidth > mapView.MAX_WIDTH ? mapView.MAX_WIDTH : stage.stageWidth, _data.pageHeight);
+			_map = new MapView(stage.stageWidth > MapView.MAX_WIDTH ? MapView.MAX_WIDTH : stage.stageWidth, data.pageHeight);
 			_map.x = stage.stageWidth - _map.width >> 1;
-			_map.data = _data;
+			_map.data = data;
 			_map.addEventListener(Event.COMPLETE, onMapComplete);
-			_map.draw(_data.top.concat(), _data.max, optionsPanel.limit);
+			_map.draw(data.top.concat(), data.max, optionsPanel.limit);
 			addChildAt(_map, 0);
 		}
 		private function onMapComplete(evt:Event):void {
 			if (contains(_loading_txt)) {
 				removeChild(_loading_txt);
 			}
-			_data.startWatchScroll();
+			data.startWatchScroll();
       optionsPanel.enabled = true;
 		}
 		private function onLimitResize(evt:Event):void {
 			_map.limit = optionsPanel.limit;
 		}
 		private function onOffsetChange(evt:Event):void {
-			_map.y = -_data.offset + optionsPanel.toY;
+			_map.y = -data.offset + optionsPanel.toY;
 		}
 		private function onStageResize(evt:Event):void {			
 			if (_map != null) {

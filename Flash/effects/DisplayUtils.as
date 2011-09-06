@@ -12,8 +12,25 @@ package effects {
     // Class Constants
     //=========================================================================
     public static const GLOW:GlowFilter = new GlowFilter(0xff0000, .6, 8, 8);
-		public static const SHADOW:DropShadowFilter = new DropShadowFilter(2, 45, 0x000000, .6, 2, 2);
+		public static const SHADOW:DropShadowFilter = new DropShadowFilter(2, 45, 0x666666, .5, 2, 2);
     public static const BLUR:BlurFilter = new BlurFilter(2, 2);
+    public static const COLORS:Vector.<uint> = new <uint>[0xFF7A00,
+                                                          0x0B90C8,
+                                                          0x6983ac,
+                                                          0xfc6035,
+                                                          0x985210,
+                                                          0x6983ac,
+                                                          0xC2D18E,
+                                                          0x34de55,
+                                                          0x25efab,
+                                                          0x899C28,
+                                                          0x92A3AB,
+                                                          0x006E2E,
+                                                          0xA6EEFC,
+                                                          0xFECD33,
+                                                          0xFC83D0,
+                                                          0xE20806,
+                                                          0x772100]
     //=========================================================================
     // Class Public Methods
     //=========================================================================

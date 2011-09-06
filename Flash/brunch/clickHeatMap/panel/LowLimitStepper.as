@@ -1,4 +1,5 @@
 ﻿package brunch.clickHeatMap.panel {
+  import effects.DisplayUtils;
   import flash.display.DisplayObject;
   import flash.display.SimpleButton;
   import flash.display.Sprite;
@@ -31,6 +32,7 @@
       this.target = target;
       this.triangle = target.getChildAt(3);
       draw();
+      target.filters = [DisplayUtils.SHADOW];
     }
     //=========================================================================
     // Properties
@@ -77,7 +79,7 @@
     //=========================================================================
     protected function draw():void {
       target.graphics.clear();
-      target.graphics.lineStyle(2, 0x333333);
+      target.graphics.lineStyle(2, 0x999999);
       target.graphics.beginFill(0xFFFFFF);
       target.graphics.drawRoundRect(0, 5, plusButton.width + plusButton.x + 3, HEIGHT, 2, 2);
       target.graphics.endFill();
