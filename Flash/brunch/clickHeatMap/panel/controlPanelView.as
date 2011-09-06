@@ -1,5 +1,4 @@
 package brunch.clickHeatMap.panel {
-  import com.adobe.utils.ArrayUtil;
   import com.bit101.components.InputText;
   import com.bit101.components.Style;
   import effects.DisplayUtils;
