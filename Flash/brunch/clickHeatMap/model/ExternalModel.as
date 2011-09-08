@@ -1,4 +1,6 @@
 package brunch.clickHeatMap.model {
+  import flash.external.ExternalInterface;
+  import flash.geom.Point;
   import flash.net.URLVariables;
 	/**
    * 保存外部参数和外部命令调用
@@ -6,6 +8,10 @@ package brunch.clickHeatMap.model {
    * @version 0.1(2011-09-05)
    */
   public class ExternalModel {
+    //=========================================================================
+    // Class Constants
+    //=========================================================================
+    public static const EX_CMD_DETAIL:String = 'showDetail';
     //=========================================================================
     // Class Variables
     //=========================================================================
@@ -63,5 +69,13 @@ package brunch.clickHeatMap.model {
     //=========================================================================
     // Public Methods
     //=========================================================================
+    public function showDetail(arr:Array, pos:Point, color:uint):void {
+      if (ExternalInterface.available) {
+        ExternalInterface.call(EX_CMD_DETAIL, arr, pos.x, pos.y, color);
+      }
+    }
+    public function removeDetail():void {
+      
+    }
   }
 }
