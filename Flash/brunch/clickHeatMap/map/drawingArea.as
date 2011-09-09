@@ -1,5 +1,6 @@
-package brunch.clickHeatMap.map 
-{
+package brunch.clickHeatMap.map {
+  import brunch.clickHeatMap.model.ExternalModel;
+  import effects.DisplayUtils;
   import flash.display.SimpleButton;
   import flash.display.Sprite;
   import flash.events.MouseEvent;
@@ -11,89 +12,34 @@ package brunch.clickHeatMap.map
 	 * @author	Meathill
 	 * @version	0.1(2011-02-24)
 	 */
-	public class drawingArea extends Sprite
-	{
+	public class DrawingArea extends Sprite	{
+    //=========================================================================
+    // Class Constants
+    //=========================================================================
 		public static const PANEL_WIDTH:int = 450;
 		public static const PANEL_HEIGHT:int = 300;
-		
-		public static var cur:drawingArea;
-		
-		private var _width:int = 10;
-		private var _height:int = 10;
-		private var _close_btn:SimpleButton;
-		private var _hide_btn:SimpleButton;
-		private var _num_txt:TextField;
-		private var _panel:dataPanel;
-		
-		public function drawingArea() 
-		{
+		//=========================================================================
+    // Class Variables
+    //=========================================================================
+		public static var cur:DrawingArea;
+    public static var items:Array = [];
+		//=========================================================================
+    // Class Public Methods
+    //=========================================================================
+    public static function setEnabled(bl:Boolean):void {
+      for each (var item:DrawingArea in items) {
+        item.enabled = bl;
+      }
+    }
+		//=========================================================================
+    // Constructor
+    //=========================================================================
+		public function DrawingArea() {
 			init();
 		}
-		
-		/************
-		 * properties
-		 * *********/
-		public function set isCur(bl:Boolean):void {
-			if (bl) {
-				if (cur != null && cur != this) {
-					cur.isCur = false;
-				}
-				cur = this;
-			}
-			setSize();
-		}
-		public function get isCur():Boolean {
-			return cur == this;
-		}
-		public function set fixed(bl:Boolean):void {
-			if (bl) {
-				_close_btn.x = _width - 20;
-				addChild(_close_btn);
-			} else {
-				removeChild(_close_btn);
-			}
-			mouseChildren = mouseEnabled = bl;
-		}
-		public function set detail(arr:Vector.<Array>):void {
-			if (null == _panel) {
-				_panel = new dataPanel(this, _width + 16);
-				_panel.setSize(PANEL_WIDTH, _height > PANEL_HEIGHT ? _height : PANEL_HEIGHT);
-				_panel.pos = [x, y, _width, _height];
-			}
-			var _list_arr:Array = [];
-			for (var i:int = 0, len:int = arr.length; i < len; i += 1) {
-				_list_arr[i] = arr[i][4] + ' | ' + arr[i][5];
-			}
-			_panel.url = _list_arr;
-			
-			// 隐藏按钮
-			_hide_btn.x = _width + 4, _hide_btn.y = _height - _hide_btn.height >> 1;
-			addChild(_hide_btn);
-			
-			// 基于当前坐标的特殊处理
-			if (stage.stageWidth - x - _width < PANEL_WIDTH + 16) {
-				_panel.x = - PANEL_WIDTH - 16;
-				_hide_btn.x = -4;
-				_hide_btn.scaleX = -_hide_btn.scaleX;
-				if (x < PANEL_WIDTH + 16) {
-					_hide_btn.x = 4, _hide_btn.scaleX = 1;
-					_panel.x = 16, _panel.y = 12;
-					_panel.setSize(PANEL_WIDTH, _height > PANEL_HEIGHT ? _height : PANEL_HEIGHT);
-				}
-			}
-		}
-		override public function get width():Number {
-			return _width;
-		}
-		override public function get height():Number {
-			return _height;
-		}
-		
-		/************
-		 * functions
-		 * *********/
 		private function init():void {
-			mouseChildren = mouseEnabled = false;
+			enabled = false;
+      items.push(this);
 			
 			_close_btn = removeChildAt(0) as SimpleButton;
 			_close_btn.addEventListener(MouseEvent.CLICK, closeHandler);
@@ -107,8 +53,91 @@ package brunch.clickHeatMap.map
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, stopPropagation);
 		}
-		private function closeHandler(evt:MouseEvent):void {
+    //=========================================================================
+    // Variables
+    //=========================================================================
+		private var _width:int = 10;
+		private var _height:int = 10;
+		private var _close_btn:SimpleButton;
+		private var _hide_btn:SimpleButton;
+		private var _num_txt:TextField;
+		private var _panel:dataPanel;
+    private var external:ExternalModel;
+    //=========================================================================
+    // properties
+    //=========================================================================
+    public var color:uint = 0x336699;
+		public function set isCur(bl:Boolean):void {
+			if (bl) {
+				if (cur != null && cur != this) {
+          if (parent != null && parent.contains(cur)) { 
+            parent.setChildIndex(this, parent.getChildIndex(cur));
+          }
+				}
+				cur = this;
+			}
+		}
+		public function get isCur():Boolean {
+			return cur == this;
+		}
+		public function set fixed(bl:Boolean):void {
+			if (bl) {
+				_close_btn.x = _width - 20;
+				addChild(_close_btn);
+			} else {
+				removeChild(_close_btn);
+			}
+			enabled = bl;
+		}
+		public function set detail(arr:Vector.<Array>):void {
+      external = ExternalModel.getInstance();
+      if (external.useHtmlDetail) {
+        external.showDetail(arr);
+      } else {
+        if (null == _panel) {
+          _panel = new dataPanel(this, _width + 16);
+          _panel.setSize(PANEL_WIDTH, _height > PANEL_HEIGHT ? _height : PANEL_HEIGHT);
+          _panel.pos = [x, y, _width, _height];
+        }
+        var _list_arr:Array = [];
+        for (var i:int = 0, len:int = arr.length; i < len; i += 1) {
+          _list_arr[i] = arr[i][4] + ' | ' + arr[i][5];
+        }
+        _panel.url = _list_arr;
+        
+        // 隐藏按钮
+        _hide_btn.x = _width + 4, _hide_btn.y = _height - _hide_btn.height >> 1;
+        addChild(_hide_btn);
+        
+        // 基于当前坐标的特殊处理
+        if (stage.stageWidth - x - _width < PANEL_WIDTH + 16) {
+          _panel.x = - PANEL_WIDTH - 16;
+          _hide_btn.x = -4;
+          _hide_btn.scaleX = -_hide_btn.scaleX;
+          if (x < PANEL_WIDTH + 16) {
+            _hide_btn.x = 4, _hide_btn.scaleX = 1;
+            _panel.x = 16, _panel.y = 12;
+            _panel.setSize(PANEL_WIDTH, _height > PANEL_HEIGHT ? _height : PANEL_HEIGHT);
+          }
+        }
+      }
+		}
+		override public function get width():Number {
+			return _width;
+		}
+		override public function get height():Number {
+			return _height;
+		}
+    public function set enabled(bl:Boolean):void {
+      mouseChildren = mouseEnabled = bl;
+    }
+		//=========================================================================
+    // Private Functions
+    //=========================================================================
+		private function closeHandler(evt:MouseEvent = null):void {
 			evt.stopImmediatePropagation();
+      DisplayUtils.COLORS.push(color);
+      items.splice(items.indexOf(this), 1);
 			parent.removeChild(this);
 		}
 		private function stopPropagation(evt:MouseEvent):void {
@@ -119,22 +148,16 @@ package brunch.clickHeatMap.map
 			_hide_btn.scaleX = -_hide_btn.scaleX;
 			_panel.visible = !_panel.visible;
 		}
-		
-		/************
-		 * methods
-		 * *********/
+		//=========================================================================
+    // Public Methods
+    //=========================================================================
 		public function setSize(w:int = 0, h:int = 0):void {
 			// 下面这俩货是取绝对值的哟
 			if (w != 0)	_width = (w ^ (w >> 31)) - (w >> 31);
 			if (h != 0) _height = (h ^ (h >> 31)) - (h >> 31);
 			graphics.clear();
-			if (isCur) {
-				graphics.lineStyle(4, 0xffffff, .6);
-				graphics.beginFill(0x336699, .4);
-			} else {
-				graphics.lineStyle(2, 0xffffff, .6);
-				graphics.beginFill(0x666666, .4);
-			}
+      graphics.lineStyle(4, 0xffffff, .75);
+      graphics.beginFill(color, .5);
 			graphics.drawRect(0, 0, _width, _height);
 			graphics.endFill();
 		}
@@ -144,5 +167,8 @@ package brunch.clickHeatMap.map
 			_num_txt.y = _height - _num_txt.height >> 1;
 			addChild(_num_txt);
 		}
+    public function remove():void {
+      closeHandler();
+    }
 	}
 }

@@ -1,8 +1,10 @@
 package brunch.clickHeatMap.map 
 {
   import brunch.clickHeatMap.model.DataModel;
+  import effects.DisplayUtils;
   import flash.display.Bitmap;
   import flash.display.BitmapData;
+  import flash.display.DisplayObject;
   import flash.display.Sprite;
   import flash.events.Event;
   import flash.events.MouseEvent;
@@ -125,6 +127,11 @@ package brunch.clickHeatMap.map
 			}
 		}
 		private function startDraw(evt:MouseEvent):void {
+      // 只允许有限个划区
+      // 目前以颜色数为限，可以画17个
+      if (DisplayUtils.COLORS.length == 0) {
+        return;
+      }
 			if (contains(_tips)) {
 				removeChild(_tips);
 			}
@@ -132,16 +139,23 @@ package brunch.clickHeatMap.map
 			addEventListener(MouseEvent.MOUSE_MOVE, onDrawing);
 			addEventListener(MouseEvent.MOUSE_UP, stopDraw);
 			stage.addEventListener(MouseEvent.MOUSE_UP, stopDraw);
+      DrawingArea.setEnabled(false);
 			
-			var _area:drawingArea = new drawingArea();
+			var _area:DrawingArea = new DrawingArea();
 			_area.isCur = true;
-			_ori_x = _area.x = evt.localX, _ori_y = _area.y = evt.localY;
+      _area.color = DisplayUtils.COLORS.shift();
+      if (evt.target == this) {
+        _ori_x = _area.x = evt.localX, _ori_y = _area.y = evt.localY;
+      } else {
+       _ori_x = _area.x = evt.localX + DisplayObject(evt.target).x;
+       _ori_y = _area.y = evt.localY + DisplayObject(evt.target).y;
+      }
 			addChild(_area);
 		}
 		private function onDrawing(evt:MouseEvent):void {
-			drawingArea.cur.setSize(evt.localX - _ori_x >> 0, evt.localY - _ori_y >> 0);
-			drawingArea.cur.x = evt.localX < _ori_x ? evt.localX : _ori_x;
-			drawingArea.cur.y = evt.localY < _ori_y ? evt.localY : _ori_y;
+			DrawingArea.cur.setSize(evt.localX - _ori_x >> 0, evt.localY - _ori_y >> 0);
+			DrawingArea.cur.x = evt.localX < _ori_x ? evt.localX : _ori_x;
+			DrawingArea.cur.y = evt.localY < _ori_y ? evt.localY : _ori_y;
 		}
 		private function stopDraw(evt:MouseEvent):void {
 			removeEventListener(MouseEvent.MOUSE_MOVE, onDrawing);
@@ -149,23 +163,20 @@ package brunch.clickHeatMap.map
 			stage.removeEventListener(MouseEvent.MOUSE_UP, stopDraw);
 			
 			if (Math.abs(evt.localX - _ori_x) > 20 && Math.abs(evt.localY - _ori_y) > 20) {
-				drawingArea.cur.fixed = true;
+				DrawingArea.cur.fixed = true;
 				
 				// 取覆盖的区块的数据
-				var _touch:Vector.<Array> = data.getRectList(drawingArea.cur.x, drawingArea.cur.y, drawingArea.cur.width, drawingArea.cur.height);
+				var _touch:Vector.<Array> = data.getRectList(DrawingArea.cur.x, DrawingArea.cur.y, DrawingArea.cur.width, DrawingArea.cur.height);
 				var _total:int = 0;
 				for (var i:int = 0, len:int = _touch.length; i < len; i += 1) {
 					_total += _touch[i][4];
 				}
-				drawingArea.cur.setNum(_total, _total / data.hits);
-				drawingArea.cur.detail = _touch;
+				DrawingArea.cur.setNum(_total, _total / data.hits);
+				DrawingArea.cur.detail = _touch;
 			} else {
-				removeChild(drawingArea.cur);
-				if (getChildAt(numChildren - 1) is drawingArea) {
-					drawingArea(getChildAt(numChildren - 1)).isCur = true;
-				}
+				DrawingArea.cur.remove();
 			}
-			
+			DrawingArea.setEnabled(true);
 			addEventListener(Event.ENTER_FRAME, onMouseMove);
 		}
 		
