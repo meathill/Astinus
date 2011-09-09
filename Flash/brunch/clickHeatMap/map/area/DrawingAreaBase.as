@@ -1,4 +1,4 @@
-package brunch.clickHeatMap.map {
+package brunch.clickHeatMap.map.area {
   import brunch.clickHeatMap.model.ExternalModel;
   import effects.DisplayUtils;
   import flash.display.SimpleButton;
@@ -12,7 +12,7 @@ package brunch.clickHeatMap.map {
 	 * @author	Meathill
 	 * @version	0.1(2011-02-24)
 	 */
-	public class DrawingArea extends Sprite	{
+	public class DrawingAreaBase extends Sprite	{
     //=========================================================================
     // Class Constants
     //=========================================================================
@@ -22,6 +22,7 @@ package brunch.clickHeatMap.map {
     // Class Variables
     //=========================================================================
 		public static var cur:DrawingArea;
+    public static var count:int = -1;
     public static var items:Array = [];
 		//=========================================================================
     // Class Public Methods
@@ -34,18 +35,19 @@ package brunch.clickHeatMap.map {
 		//=========================================================================
     // Constructor
     //=========================================================================
-		public function DrawingArea() {
+		public function DrawingAreaBase() {
 			init();
 		}
-		private function init():void {
+		protected function init():void {
 			enabled = false;
       items.push(this);
+      index = count++;
 			
-			_close_btn = removeChildAt(0) as SimpleButton;
-			_close_btn.addEventListener(MouseEvent.CLICK, closeHandler);
+			closeButton = removeChildAt(0) as SimpleButton;
+			closeButton.addEventListener(MouseEvent.CLICK, closeHandler);
 			
-			_hide_btn = removeChildAt(0) as SimpleButton;
-			_hide_btn.addEventListener(MouseEvent.CLICK, toggleList);
+			hideButton = removeChildAt(0) as SimpleButton;
+			hideButton.addEventListener(MouseEvent.CLICK, toggleList);
 			
 			_num_txt = removeChildAt(0) as TextField;
 			_num_txt.mouseEnabled = false;
@@ -58,11 +60,12 @@ package brunch.clickHeatMap.map {
     //=========================================================================
 		private var _width:int = 10;
 		private var _height:int = 10;
-		private var _close_btn:SimpleButton;
-		private var _hide_btn:SimpleButton;
 		private var _num_txt:TextField;
-		private var _panel:dataPanel;
-    private var external:ExternalModel;
+		private var _panel:DataPanel;
+		protected var closeButton:SimpleButton;
+		protected var hideButton:SimpleButton;
+    protected var index:int = 0;
+    protected var external:ExternalModel;
     //=========================================================================
     // properties
     //=========================================================================
@@ -82,17 +85,17 @@ package brunch.clickHeatMap.map {
 		}
 		public function set fixed(bl:Boolean):void {
 			if (bl) {
-				_close_btn.x = _width - 20;
-				addChild(_close_btn);
+				closeButton.x = _width - 20;
+				addChild(closeButton);
 			} else {
-				removeChild(_close_btn);
+				removeChild(closeButton);
 			}
 			enabled = bl;
 		}
 		public function set detail(arr:Vector.<Array>):void {
       external = ExternalModel.getInstance();
       if (external.useHtmlDetail) {
-        external.showDetail(arr);
+        external.showDetail(arr, getRect(parent), color, index);
       } else {
         if (null == _panel) {
           _panel = new dataPanel(this, _width + 16);
@@ -106,16 +109,16 @@ package brunch.clickHeatMap.map {
         _panel.url = _list_arr;
         
         // 隐藏按钮
-        _hide_btn.x = _width + 4, _hide_btn.y = _height - _hide_btn.height >> 1;
-        addChild(_hide_btn);
+        hideButton.x = _width + 4, hideButton.y = _height - hideButton.height >> 1;
+        addChild(hideButton);
         
         // 基于当前坐标的特殊处理
         if (stage.stageWidth - x - _width < PANEL_WIDTH + 16) {
           _panel.x = - PANEL_WIDTH - 16;
-          _hide_btn.x = -4;
-          _hide_btn.scaleX = -_hide_btn.scaleX;
+          hideButton.x = -4;
+          hideButton.scaleX = -hideButton.scaleX;
           if (x < PANEL_WIDTH + 16) {
-            _hide_btn.x = 4, _hide_btn.scaleX = 1;
+            hideButton.x = 4, hideButton.scaleX = 1;
             _panel.x = 16, _panel.y = 12;
             _panel.setSize(PANEL_WIDTH, _height > PANEL_HEIGHT ? _height : PANEL_HEIGHT);
           }
@@ -132,20 +135,22 @@ package brunch.clickHeatMap.map {
       mouseChildren = mouseEnabled = bl;
     }
 		//=========================================================================
-    // Private Functions
+    // Protected Functions
     //=========================================================================
-		private function closeHandler(evt:MouseEvent = null):void {
+		protected function closeHandler(evt:MouseEvent = null):void {
 			evt.stopImmediatePropagation();
       DisplayUtils.COLORS.push(color);
       items.splice(items.indexOf(this), 1);
 			parent.removeChild(this);
+      
+      external = null;
 		}
-		private function stopPropagation(evt:MouseEvent):void {
+		protected function stopPropagation(evt:MouseEvent):void {
 			evt.stopPropagation();
 		}
-		private function toggleList(evt:MouseEvent):void {
-			_hide_btn.x += 8 * _hide_btn.scaleX;
-			_hide_btn.scaleX = -_hide_btn.scaleX;
+		protected function toggleList(evt:MouseEvent):void {
+			hideButton.x += 8 * hideButton.scaleX;
+			hideButton.scaleX = -hideButton.scaleX;
 			_panel.visible = !_panel.visible;
 		}
 		//=========================================================================

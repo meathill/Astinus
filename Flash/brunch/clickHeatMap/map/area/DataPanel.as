@@ -1,4 +1,4 @@
-package brunch.clickHeatMap.map {
+package brunch.clickHeatMap.map.area {
   import brunch.clickHeatMap.model.ExternalModel;
   import com.bit101.components.Accordion;
   import com.bit101.components.Label;
@@ -17,7 +17,7 @@ package brunch.clickHeatMap.map {
 	 * @author	Meathill
 	 * @version	0.1(2011-03-22)
 	 */
-	public class dataPanel extends Accordion {
+	public class DataPanel extends Accordion {
 		public var pos:Array;
 		
 		public static const DIMENSIONS:Vector.<String> = new < String > ['链接', '产品', '标题', '页面类型'];
@@ -28,7 +28,7 @@ package brunch.clickHeatMap.map {
 		private var _cur:int = 0;
     private var external:ExternalModel;
 		
-		public function dataPanel(parent:DisplayObjectContainer=null, xpos:Number=0, ypos:Number=0) {
+		public function DataPanel(parent:DisplayObjectContainer=null, xpos:Number=0, ypos:Number=0) {
 			super(parent, xpos, ypos);
 		}
 		
@@ -84,7 +84,8 @@ package brunch.clickHeatMap.map {
 			
 			_cur = _windows.indexOf(window);
 			if (window.content.numChildren == 0) {
-				_data.paramStr = 'r=' + external.search +'&d=' + external.date + '&select=' + pos.join('.') + '.' + TYPE[_cur] + '&w=' + external.clientWidth;
+        _data.param = external.param;
+        _data.param.decode('r=' + external.search + '&select=' + pos.join('.') + '.' + TYPE[_cur] + '&w=' + external.clientWidth);
 				_data.load();
 				new Label(window.content, 5, 5, '加载数据');
 				enabled = false;

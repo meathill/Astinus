@@ -1,6 +1,9 @@
 package brunch.clickHeatMap.map 
 {
+  import brunch.clickHeatMap.map.area.DrawingAreaBase;
+  import brunch.clickHeatMap.map.area.HTMLDrawingArea;
   import brunch.clickHeatMap.model.DataModel;
+  import brunch.clickHeatMap.model.ExternalModel;
   import effects.DisplayUtils;
   import flash.display.Bitmap;
   import flash.display.BitmapData;
@@ -35,6 +38,7 @@ package brunch.clickHeatMap.map
 		private var _total:int = 0;
 		private var _ori_x:int = 0, _ori_y:int = 0;
 		private var _width:int = 0, _height:int = 0;
+    private var external:ExternalModel;
 		
 		public function MapView(w:int = 100, h:int = 100) 
 		{
@@ -139,9 +143,9 @@ package brunch.clickHeatMap.map
 			addEventListener(MouseEvent.MOUSE_MOVE, onDrawing);
 			addEventListener(MouseEvent.MOUSE_UP, stopDraw);
 			stage.addEventListener(MouseEvent.MOUSE_UP, stopDraw);
-      DrawingArea.setEnabled(false);
+      DrawingAreaBase.setEnabled(false);
 			
-			var _area:DrawingArea = new DrawingArea();
+			var _area:DrawingAreaBase = getDrawingArea();
 			_area.isCur = true;
       _area.color = DisplayUtils.COLORS.shift();
       if (evt.target == this) {
@@ -153,9 +157,9 @@ package brunch.clickHeatMap.map
 			addChild(_area);
 		}
 		private function onDrawing(evt:MouseEvent):void {
-			DrawingArea.cur.setSize(evt.localX - _ori_x >> 0, evt.localY - _ori_y >> 0);
-			DrawingArea.cur.x = evt.localX < _ori_x ? evt.localX : _ori_x;
-			DrawingArea.cur.y = evt.localY < _ori_y ? evt.localY : _ori_y;
+			DrawingAreaBase.cur.setSize(evt.localX - _ori_x >> 0, evt.localY - _ori_y >> 0);
+			DrawingAreaBase.cur.x = evt.localX < _ori_x ? evt.localX : _ori_x;
+			DrawingAreaBase.cur.y = evt.localY < _ori_y ? evt.localY : _ori_y;
 		}
 		private function stopDraw(evt:MouseEvent):void {
 			removeEventListener(MouseEvent.MOUSE_MOVE, onDrawing);
@@ -163,22 +167,29 @@ package brunch.clickHeatMap.map
 			stage.removeEventListener(MouseEvent.MOUSE_UP, stopDraw);
 			
 			if (Math.abs(evt.localX - _ori_x) > 20 && Math.abs(evt.localY - _ori_y) > 20) {
-				DrawingArea.cur.fixed = true;
+				DrawingAreaBase.cur.fixed = true;
 				
 				// 取覆盖的区块的数据
-				var _touch:Vector.<Array> = data.getRectList(DrawingArea.cur.x, DrawingArea.cur.y, DrawingArea.cur.width, DrawingArea.cur.height);
+				var _touch:Vector.<Array> = data.getRectList(DrawingAreaBase.cur.x, DrawingAreaBase.cur.y, DrawingAreaBase.cur.width, DrawingAreaBase.cur.height);
 				var _total:int = 0;
 				for (var i:int = 0, len:int = _touch.length; i < len; i += 1) {
 					_total += _touch[i][4];
 				}
-				DrawingArea.cur.setNum(_total, _total / data.hits);
-				DrawingArea.cur.detail = _touch;
+				DrawingAreaBase.cur.setNum(_total, _total / data.hits);
+				DrawingAreaBase.cur.detail = _touch;
 			} else {
-				DrawingArea.cur.remove();
+				DrawingAreaBase.cur.remove();
 			}
-			DrawingArea.setEnabled(true);
+			DrawingAreaBase.setEnabled(true);
 			addEventListener(Event.ENTER_FRAME, onMouseMove);
 		}
+    private function getDrawingArea():DrawingAreaBase {
+      if (external.useHtmlDetail) {
+        return new HTMLDrawingArea();
+      } else {
+        return new DrawingAreaBase();
+      }
+    }
 		
 		/************
 		 * methods

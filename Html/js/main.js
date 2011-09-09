@@ -117,7 +117,10 @@ var ui = {
     _h = $('#page').contents().height();
     $('#page, #cover').height(_h);
   }
-}
+};
+var CountArea = {
+  
+};
 var utils = {
   /**
    * 这个函数用来检查url输入的合法性，并自动更正

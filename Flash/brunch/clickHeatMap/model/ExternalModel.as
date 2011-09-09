@@ -1,6 +1,6 @@
 package brunch.clickHeatMap.model {
   import flash.external.ExternalInterface;
-  import flash.geom.Point;
+  import flash.geom.Rectangle;
   import flash.net.URLVariables;
 	/**
    * 保存外部参数和外部命令调用
@@ -11,7 +11,9 @@ package brunch.clickHeatMap.model {
     //=========================================================================
     // Class Constants
     //=========================================================================
-    public static const EX_CMD_DETAIL:String = 'showDetail';
+    public static const CMD_SHOW_DETAIL:String = 'showDetail';
+    public static const CMS_REMOVE_DETAIL:String = 'removeDetail';
+    public static const PLACE_HOLDER:Vector.<String> = new <String>['u', 'd', 'b', 'ab', 'nocache', 'visitor'];
     //=========================================================================
     // Class Variables
     //=========================================================================
@@ -30,7 +32,10 @@ package brunch.clickHeatMap.model {
     //=========================================================================
     public function ExternalModel(obj:Object) {
       if (obj.hasOwnProperty('useHtmlDetail')) {
-        _useHtmlDetail = obj.useHtmlDetail;
+        useHtmlDetail = obj.useHtmlDetail;
+      }
+      if (obj.hasOwnProperty('r')) {
+        remote = obj.r;
       }
       
       _param = new URLVariables();
@@ -39,13 +44,9 @@ package brunch.clickHeatMap.model {
 			_param.nocache = 0;
 			_param.visitor = 'new';
 			for (var prop:String in obj) {
-        if (prop == 'd') {
-          date = obj.d;
+        if (PLACE_HOLDER.indexOf(prop) != -1) {
+          _param[prop] = obj[prop];
         }
-        if (prop == 'r') {
-          remote = obj.r;
-        }
-				_param[prop] = obj[prop];
 			}
     }
     //=========================================================================
@@ -55,27 +56,27 @@ package brunch.clickHeatMap.model {
 		public var date:String;
 		public var search:String;
 		public var remote:String;
-    public function get useHtmlDetail():Boolean {
-      return _useHtmlDetail;
-    }
+    public var useHtmlDetail:Boolean = false;
     public function get param():URLVariables {
-      return _param;
+      return new URLVariables(_param.toString());
     }
     //=========================================================================
     // Variables
     //=========================================================================
-    private var _useHtmlDetail:Boolean = false;
     private var _param:URLVariables;
     //=========================================================================
     // Public Methods
     //=========================================================================
-    public function showDetail(arr:Array, pos:Point, color:uint):void {
+    public function showDetail(arr:Array, rect:Rectangle, color:uint, id:int):void {
       if (ExternalInterface.available) {
-        ExternalInterface.call(EX_CMD_DETAIL, arr, pos.x, pos.y, color);
+        ExternalInterface.call(CMD_SHOW_DETAIL, arr, rect.x, rect.y, rect.width, rect.height, color);
       }
     }
-    public function removeDetail():void {
-      
+    public function removeDetail(id:int):void {
+      if (ExternalInterface.available) {
+        ExternalInterface.call(CMS_REMOVE_DETAIL, id);
+      }
     }
+    
   }
 }

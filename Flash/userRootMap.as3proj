@@ -16,15 +16,9 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="." />
-<<<<<<< HEAD
+    <class path="..\..\..\Flash Libs" />
     <class path="..\..\..\Flash Projects\minimalcomps\src" />
-    <class path="..\..\..\flash project\as3corelib\src" />
-    <class path="..\..\..\Flash Libs" />
-=======
-    <class path="..\..\..\Flash Libs" />
-    <class path="..\..\..\Flash Project\minimalcomps\src" />
-    <class path="..\..\..\Flash Project\as3corelib\src" />
->>>>>>> ea15ecea4d17f69f10f4d39ba3fef0251eb56da8
+    <class path="..\..\..\Flash Projects\as3corelib\src" />
   </classpaths>
   <!-- Build options -->
   <build>
