@@ -21,14 +21,14 @@ package brunch.clickHeatMap.map.area {
 		//=========================================================================
     // Class Variables
     //=========================================================================
-		public static var cur:DrawingArea;
+		public static var cur:DrawingAreaBase;
     public static var count:int = -1;
     public static var items:Array = [];
 		//=========================================================================
     // Class Public Methods
     //=========================================================================
     public static function setEnabled(bl:Boolean):void {
-      for each (var item:DrawingArea in items) {
+      for each (var item:DrawingAreaBase in items) {
         item.enabled = bl;
       }
     }
@@ -42,6 +42,7 @@ package brunch.clickHeatMap.map.area {
 			enabled = false;
       items.push(this);
       index = count++;
+      isCur = true;
 			
 			closeButton = removeChildAt(0) as SimpleButton;
 			closeButton.addEventListener(MouseEvent.CLICK, closeHandler);
@@ -95,10 +96,14 @@ package brunch.clickHeatMap.map.area {
 		public function set detail(arr:Vector.<Array>):void {
       external = ExternalModel.getInstance();
       if (external.useHtmlDetail) {
-        external.showDetail(arr, getRect(parent), color, index);
+        var listArray:Array = [];
+        for (var i:int = 0, len:int = arr.length; i < len; i += 1) {
+          listArray[i] = arr[i];
+        }
+        external.showDetail(listArray, getRect(parent), color, index);
       } else {
         if (null == _panel) {
-          _panel = new dataPanel(this, _width + 16);
+          _panel = new DataPanel(this, _width + 16);
           _panel.setSize(PANEL_WIDTH, _height > PANEL_HEIGHT ? _height : PANEL_HEIGHT);
           _panel.pos = [x, y, _width, _height];
         }

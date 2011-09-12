@@ -119,7 +119,27 @@ var ui = {
   }
 };
 var CountArea = {
-  
+  showDetail : function (arr, x, y, w, h, color, id) {
+    var list = [];
+    for (var i = 0, len = arr.length; i < len; i += 1) {
+      list.push({link: arr[i][4], num: arr[i][5]});
+    }
+    var panel = $('#dp' + id);
+    if (panel.length == 0) {
+      panel = new DataPanel(list, color, id);
+    } else {
+      panel.setURLS(list);
+    }
+    panel.moveTo(x, y);
+    
+    // 基于当前坐标的特殊处理
+    if ($(window).width() - x - _width < panel.width() + 16) {
+      panel.x = - panel.width() - 16;
+    }
+  },
+  removeDetail : function (id) {
+    $('#dp' + id).close();
+  }
 };
 var utils = {
   /**
@@ -150,7 +170,6 @@ var utils = {
     }
     return url;
   }
-  
 }
 // 自动运行
 $(ui.init);

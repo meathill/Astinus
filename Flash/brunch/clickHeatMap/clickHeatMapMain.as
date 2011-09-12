@@ -2,7 +2,6 @@ package brunch.clickHeatMap {
   import brunch.clickHeatMap.controller.GUI;
   import brunch.clickHeatMap.map.MapView;
   import brunch.clickHeatMap.model.DataModel;
-  import brunch.clickHeatMap.map.dataPanel;
   import brunch.clickHeatMap.model.ExternalModel;
   import brunch.clickHeatMap.panel.ControlPanelView;
   import com.zol.basicMain;

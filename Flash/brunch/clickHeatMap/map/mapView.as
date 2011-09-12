@@ -67,6 +67,7 @@ package brunch.clickHeatMap.map
 		private function init(w:int, h:int):void {
 			_width = w, _height = h;
 			_tips = curLinkTips(removeChildAt(0));
+      external = ExternalModel.getInstance();
 			
 			// 如果高度大于最大高度，那么建立一个数组来存储所有位图
 			_bmps = [];
@@ -146,7 +147,6 @@ package brunch.clickHeatMap.map
       DrawingAreaBase.setEnabled(false);
 			
 			var _area:DrawingAreaBase = getDrawingArea();
-			_area.isCur = true;
       _area.color = DisplayUtils.COLORS.shift();
       if (evt.target == this) {
         _ori_x = _area.x = evt.localX, _ori_y = _area.y = evt.localY;

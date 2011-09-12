@@ -3,9 +3,9 @@
  */  
 body{font:12px/18px simsun;color:#333}
 body{height:100%}
-body,p,form,input,select,h1{padding:0;margin:0}
+body,p,form,input,select,h1,dl,dt,dd{padding:0;margin:0}
 img{border:0}
-a{color:#333;text-decoration: none}
+a{color:#333;text-decoration: none;border:none}
 a:hover{color:#f60;text-decoration:underline}
 h1{font:bolder 30px/40px microsoft yahei,simhei;color:#3d80b3;padding:0 0 20px 20px;}
 
@@ -53,3 +53,14 @@ h1{font:bolder 30px/40px microsoft yahei,simhei;color:#3d80b3;padding:0 0 20px 2
     #topbar .url:hover{background:#f0f9ff;border-top:1px solid #DEEDF7;border-left: 1px solid #DEEDF7;line-height: 17px;padding-left:4px}
   #topbar label.ui-button{width: 60px;font:12px/20px simsun;float: right}
   #topbar button{float: right;margin: 0 5px;width:18px;height: 18px}
+
+/**
+ * ”√ªßΩªª•
+ */
+.DataPanel{position: absolute;border: 5px solid #CCC;width:300px;position: relative;padding: 20px 0 0}
+  .DataPanel dt{padding: 2px 10px;background: #F0F0F0;border-top:2px solid #F9F9F9;border-bottom: 2px solid #CCC;font:bold 14px/20px simsun;cursor: pointer}
+  .DataPanel dd{display: none;padding: 5px;background: #FFF}
+  .DataPanel .close{width:12px;height:12px;position: absolute;font-size:14px;top:1px;right:1px;background: url(../images/close.png)}
+    .DataPanel .close:hover{background: url(../images/close2.png)}
+  .DataPanel table{background: #CCC}
+  .DataPanel td{background: #FFF;padding: 0 4px}

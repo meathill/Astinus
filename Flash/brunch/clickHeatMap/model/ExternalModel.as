@@ -11,8 +11,8 @@ package brunch.clickHeatMap.model {
     //=========================================================================
     // Class Constants
     //=========================================================================
-    public static const CMD_SHOW_DETAIL:String = 'showDetail';
-    public static const CMS_REMOVE_DETAIL:String = 'removeDetail';
+    public static const CMD_SHOW_DETAIL:String = 'CountArea.showDetail';
+    public static const CMS_REMOVE_DETAIL:String = 'CountArea.removeDetail';
     public static const PLACE_HOLDER:Vector.<String> = new <String>['u', 'd', 'b', 'ab', 'nocache', 'visitor'];
     //=========================================================================
     // Class Variables
@@ -69,7 +69,7 @@ package brunch.clickHeatMap.model {
     //=========================================================================
     public function showDetail(arr:Array, rect:Rectangle, color:uint, id:int):void {
       if (ExternalInterface.available) {
-        ExternalInterface.call(CMD_SHOW_DETAIL, arr, rect.x, rect.y, rect.width, rect.height, color);
+        ExternalInterface.call(CMD_SHOW_DETAIL, arr, rect.x, rect.y, rect.width, rect.height, color, id);
       }
     }
     public function removeDetail(id:int):void {

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>测试用例：划区后显示区域内数据</title>
+    <link rel="stylesheet" href="../../css/main.css" />
+    <script src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
+    <script src="../../js/DrawingArea.js"></script>
+    <script>
+      var panel;
+      $(function () {
+        var arr = [{link: 'http://blog.zol.com..cn/', num: 10},
+                   {link: 'http://t.sina.com.cn/', num: 8}];
+        panel = new DataPanel(arr, '#BBDDFF', 1);
+        panel.appendTo($('body'));
+        panel.moveTo(100, 100);
+        //console.log(panel);
+      });
+    </script>
+  </head>
+  <body>
+    &nbsp;
+  </body>
+</html>
