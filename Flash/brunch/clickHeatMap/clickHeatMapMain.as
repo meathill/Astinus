@@ -4,7 +4,7 @@ package brunch.clickHeatMap {
   import brunch.clickHeatMap.model.DataModel;
   import brunch.clickHeatMap.model.ExternalModel;
   import brunch.clickHeatMap.panel.ControlPanelView;
-  import com.zol.basicMain;
+  import com.meathill.basicMain;
   import flash.display.SimpleButton;
   import flash.events.Event;
   import flash.events.IOErrorEvent;

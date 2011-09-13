@@ -1,63 +1,74 @@
 /**
  * 数据面板类
  * @author Meathill
+ * @constructor
  * @param Array arr 生成数据的数组
  * @param String color 表示颜色的字符串，以“#”开始
  * @param int id 该面板的索引
  */
 function DataPanel(arr, color, id) {
-  this.parent = null;
-  this.moveTo = function (x, y) {
-    this.body.css('left', x + 'px');
-    this.body.css('top', y + 'px');
-  }
   this.appendTo = function (parent) {
-    this.parent = $(parent);
-    this.parent.append(this.body);
-  }
-  this.setURLS = function (arr) {
-    var init = {'cellspacing': 1,
-                'cellpadding': 0,
-                'border': 0,
-                'width': '100%'}
-    var table = $('<table>', init);
-    for (var i = 0; i < arr.length; i++) {
-      var tr = $('<tr>');
-      tr.append($('<td>', {text: arr[i].link}));
-      tr.append($('<td>', {text: arr[i].num}));
-      tr.appendTo(table);
-    }
-    var dd = this.body.children('dd').eq(0);
-    dd.empty().append(table);
-    dd.css('display', 'block');
-  }
-  this.close = function (evt) {
-    var id = parseInt($(this).parent().attr('id').substr(2));
-    DataPanel.prototype.items[id].remove();
-  }
-  this.remove = function (evt) {
-    this.body.remove();
+    var parent = $(parent);
+    parent.append(self.body);
+    init.maxHeight = init.minHeight = self.body.height();
+    self.body.resizable(init);
   }
   this.show = function (evt) {
-    var index = parseInt($(this).attr('index'));
-    var parent = $(this).parent();
-    parent.children('dd')
-      .hide()
-      .eq(index).show();
+    if (index != -1) {
+      return;
+    }
+    self.body.height('');
+    self.body.children('dd').hide();
+    $(this).next().show();
+    init.maxHeight = init.minHeight = self.body.height();
+    self.body.resizable(init);
+    // 是否要加载数据
+    if ($(this).next().html() == '') {
+      console.log('load data..');
+      index = parseInt($(this).attr('index'));
+      $.ajax({
+        url: self.url,
+        type: "GET",
+        data: {r: self.r, select: self.select + '.' + self.type[index], w: $(window).width()},
+        success: self.onData 
+      });
+    }
+  }
+  this.close = function (evt) {
+    self.remove();
+  }
+  this.onData = function (data) {
+    console.log(data);
+    index = -1;
   }
   
+  /**
+   * @public
+   */
+  this.select = '';
+  /**
+   * @private
+   */
+  var self = this;
+  var index = -1;
   // 主体使用dl，里面每个模块都是dt+dd
   var init = {'id': 'dp' + id,
-              'class': 'DataPanel',
-              'style': 'border-color:' + color + ';background:' + color}
+              'class': 'DataPanel ui-widget-content',
+              'style': 'border-color:' + color + ';background:' + color};
   this.body = $('<dl>', init);
   for (var i = 0; i < this.list.length; i++) {
     init = {text: this.list[i],
             'index': i,
             click: this.show};
     this.body.append($('<dt>', init));
-    this.body.append($('<dd>', {text: i}));
+    this.body.append($('<dd>'));
   }
+  // 拖动按钮
+  init = {'class': 'dragbar',
+          'alt': '拖动窗体'}
+  var drag = $('<div>', init).html('<img src="http://works.meathill.net/images/spacer.gif" />');
+  drag.appendTo(this.body);
+  this.body.draggable({handle: '.dragbar', stack: '.DataPanel'});
   // 关闭按钮
   init = {'class': 'close',
           'href': 'javascript:void(0);',
@@ -67,7 +78,37 @@ function DataPanel(arr, color, id) {
   close.appendTo(this.body);
   // 默认显示的列表
   this.setURLS(arr);
-  this.items[id] = this;
+  
+  // 缩放的初始化参数
+  init = {maxHeight: 0,
+          minHeight: 0,
+          minWidth: 300,
+          alsoResize: '.dragbar'};
 }
 DataPanel.prototype.list = ['链接', '产品', '标题', '页面类型'];
-DataPanel.prototype.items = [];
+DataPanel.prototype.type = ['url', 'product', 'title', 'page_type']
+DataPanel.prototype.url = '';
+DataPanel.prototype.r = '';
+DataPanel.prototype.moveTo = function (x, y) {
+  this.body.css('left', x + 'px');
+  this.body.css('top', y + 'px');
+}
+DataPanel.prototype.setURLS = function (arr) {
+  var init = {'cellspacing': 1,
+              'cellpadding': 0,
+              'border': 0,
+              'width': '100%'}
+  var table = $('<table>', init);
+  for (var i = 0; i < arr.length; i++) {
+    var tr = $('<tr>');
+    tr.append($('<td>', {text: arr[i].link}));
+    tr.append($('<td>', {text: arr[i].num}));
+    tr.appendTo(table);
+  }
+  var dd = this.body.children('dd').eq(0);
+  dd.empty().append(table);
+  dd.css('display', 'block');
+}
+DataPanel.prototype.remove = function (evt) {
+  this.body.remove();
+}

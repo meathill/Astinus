@@ -13,7 +13,7 @@ package brunch.clickHeatMap.model {
     //=========================================================================
     public static const CMD_SHOW_DETAIL:String = 'CountArea.showDetail';
     public static const CMS_REMOVE_DETAIL:String = 'CountArea.removeDetail';
-    public static const PLACE_HOLDER:Vector.<String> = new <String>['u', 'd', 'b', 'ab', 'nocache', 'visitor'];
+    public static const PLACE_HOLDER:Vector.<String> = new <String>['r', 'u', 'd', 'b', 'ab', 'nocache', 'visitor'];
     //=========================================================================
     // Class Variables
     //=========================================================================

@@ -2,22 +2,33 @@
 <html>
   <head>
     <title>测试用例：划区后显示区域内数据</title>
+    <link rel="stylesheet" href="http://works.meathill.net/css/cupertino/jquery-ui-1.8.16.custom.css" />
     <link rel="stylesheet" href="../../css/main.css" />
-    <script src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
+    <script src="http://works.meathill.net/js/jquery-1.6.3.min.js"></script>
+    <script src="http://works.meathill.net/js/jquery-ui-1.8.16.custom.min.js"></script>
     <script src="../../js/DrawingArea.js"></script>
     <script>
-      var panel;
+      var panel1, panel2;
       $(function () {
         var arr = [{link: 'http://blog.zol.com..cn/', num: 10},
                    {link: 'http://t.sina.com.cn/', num: 8}];
-        panel = new DataPanel(arr, '#BBDDFF', 1);
-        panel.appendTo($('body'));
-        panel.moveTo(100, 100);
-        //console.log(panel);
+        panel1 = new DataPanel(arr, '#BBDDFF', 1);
+        panel1.appendTo($('body'));
+        panel1.moveTo(100, 100);
+        panel1.select = '304.79.551.92';
+        panel2 = new DataPanel(arr, '#FFBBBB', 2);
+        panel2.appendTo($('body'));
+        panel2.moveTo(500, 120);
+        panel2.select = '1002.416.267.203';
+        panel1.url = 'http://area.zol.com.cn/cgi-bin/click_url.cgi';
+        panel1.r = 'http://blog.zol.com.cn/';
       });
     </script>
+    <style>
+      #test{width:100px;height:100px;border: 1px solid #ccc}
+    </style>
   </head>
   <body>
-    &nbsp;
+    
   </body>
 </html>

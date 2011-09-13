@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>测试prototype的方法和this.func的区别</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+    <script src="http://works.meathill.net/js/jquery-1.6.3.min.js"></script>
+    <script>
+      function myclass(str) {
+        var sex = 'male';
+        this.name = str;
+        this.showName = function () {
+          return this.name;
+        }
+        this.showSex = function () {
+          return sex;
+        }
+      }
+      myclass.prototype.myname = function () {
+        return this.name;
+      }
+      myclass.prototype.mysex = function () {
+        return this.sex;
+      }
+      var a = new myclass('zhai');
+      var b = new myclass('lujia');
+    </script>
+  </head>
+  <body>
+    
+  </body>
+</html>
