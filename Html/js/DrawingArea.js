@@ -25,6 +25,7 @@ function DataPanel(arr, color, id) {
     // 是否要加载数据
     if ($(this).next().html() == '') {
       console.log('load data..');
+      $(this).next().html('加载数据，请稍候');
       index = parseInt($(this).attr('index'));
       var param = {r: self.r,
                    select: self.select + '.' + self.type[index],
@@ -38,6 +39,25 @@ function DataPanel(arr, color, id) {
   }
   this.onData = function (data) {
     console.log(data);
+    var result;
+    if (data == '') {
+      result = '无相关数据';
+    } else {
+      var init = {'cellspacing': 1,
+                  'cellpadding': 0,
+                  'border': 0,
+                  'width': '100%'}; 
+      result = $('<table>', init);
+      var arr = data.split('\n');
+      for (var i = 0; i < arr.length; i++) {
+        var row = arr[i].split(',');
+        var tr = $('<tr>');
+        tr.append($('<td>', {text: row[0]}));
+        tr.append($('<td>', {text: row[1]}));
+        tr.appendTo(result);
+      }
+    }
+    self.body.children('dd').eq(index).empty().append(result);
     index = -1;
   }
   
