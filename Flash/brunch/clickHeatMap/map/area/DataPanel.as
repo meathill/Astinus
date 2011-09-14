@@ -85,7 +85,7 @@ package brunch.clickHeatMap.map.area {
 			_cur = _windows.indexOf(window);
 			if (window.content.numChildren == 0) {
         _data.param = external.param;
-        _data.param.decode('r=' + external.search + '&select=' + pos.join('.') + '.' + TYPE[_cur] + '&w=' + external.clientWidth);
+        _data.param.decode('select=' + pos.join('.') + '.' + TYPE[_cur] + '&w=' + external.clientWidth);
 				_data.load();
 				new Label(window.content, 5, 5, '加载数据');
 				enabled = false;

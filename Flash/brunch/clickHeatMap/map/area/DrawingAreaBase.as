@@ -55,6 +55,7 @@ package brunch.clickHeatMap.map.area {
 			_num_txt.autoSize = TextFieldAutoSize.CENTER;
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, stopPropagation);
+      addEventListener(MouseEvent.CLICK, onClick);
 		}
     //=========================================================================
     // Variables
@@ -100,7 +101,7 @@ package brunch.clickHeatMap.map.area {
         for (var i:int = 0, len:int = arr.length; i < len; i += 1) {
           listArray[i] = arr[i];
         }
-        external.showDetail(listArray, getRect(parent), color, index);
+        external.showDetail(index, listArray, getRect(parent), color);
       } else {
         if (null == _panel) {
           _panel = new DataPanel(this, _width + 16);
@@ -153,7 +154,18 @@ package brunch.clickHeatMap.map.area {
 		protected function stopPropagation(evt:MouseEvent):void {
 			evt.stopPropagation();
 		}
-		protected function toggleList(evt:MouseEvent):void {
+    protected function onClick(evt:MouseEvent):void {
+      evt.stopPropagation();
+      if (external.useHtmlDetail) {
+        external.showDetail(index);
+      } else if (!_panel.visible) {
+        toggleList();
+      }
+    }
+		protected function toggleList(evt:MouseEvent = null):void {
+      if (evt != null) {
+        evt.stopPropagation();
+      }
 			hideButton.x += 8 * hideButton.scaleX;
 			hideButton.scaleX = -hideButton.scaleX;
 			_panel.visible = !_panel.visible;

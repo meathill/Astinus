@@ -26,12 +26,11 @@ function DataPanel(arr, color, id) {
     if ($(this).next().html() == '') {
       console.log('load data..');
       index = parseInt($(this).attr('index'));
-      $.ajax({
-        url: self.url,
-        type: "GET",
-        data: {r: self.r, select: self.select + '.' + self.type[index], w: $(window).width()},
-        success: self.onData 
-      });
+      var param = {r: self.r,
+                   select: self.select + '.' + self.type[index],
+                   w: $(window).width(),
+                   d: self.date};
+      $.get(self.url, param, self.onData);
     }
   }
   this.close = function (evt) {
@@ -89,6 +88,7 @@ DataPanel.prototype.list = ['链接', '产品', '标题', '页面类型'];
 DataPanel.prototype.type = ['url', 'product', 'title', 'page_type']
 DataPanel.prototype.url = '';
 DataPanel.prototype.r = '';
+DataPanel.prototype.date = '';
 DataPanel.prototype.moveTo = function (x, y) {
   this.body.css('left', x + 'px');
   this.body.css('top', y + 'px');

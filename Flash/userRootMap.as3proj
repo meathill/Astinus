@@ -17,8 +17,8 @@
   <classpaths>
     <class path="." />
     <class path="..\..\..\Flash Libs" />
-    <class path="..\..\..\Flash Projects\minimalcomps\src" />
     <class path="..\..\..\Flash Projects\as3corelib\src" />
+    <class path="..\..\..\Flash Projects\minimalcomps\src" />
   </classpaths>
   <!-- Build options -->
   <build>

@@ -34,9 +34,6 @@ package brunch.clickHeatMap.model {
       if (obj.hasOwnProperty('useHtmlDetail')) {
         useHtmlDetail = obj.useHtmlDetail;
       }
-      if (obj.hasOwnProperty('r')) {
-        remote = obj.r;
-      }
       
       _param = new URLVariables();
       _param.r = 'http://dealer.zol.com.cn/';
@@ -53,8 +50,6 @@ package brunch.clickHeatMap.model {
     // Properties
     //========================================================================= 
 		public var clientWidth:int;
-		public var date:String;
-		public var search:String;
 		public var remote:String;
     public var useHtmlDetail:Boolean = false;
     public function get param():URLVariables {
@@ -67,9 +62,10 @@ package brunch.clickHeatMap.model {
     //=========================================================================
     // Public Methods
     //=========================================================================
-    public function showDetail(arr:Array, rect:Rectangle, color:uint, id:int):void {
+    public function showDetail(id:int, arr:Array = null, rect:Rectangle = null, color:uint = 0xFFFFFF):void {
       if (ExternalInterface.available) {
-        ExternalInterface.call(CMD_SHOW_DETAIL, arr, rect.x, rect.y, rect.width, rect.height, color, id);
+        rect = rect || new Rectangle();
+        ExternalInterface.call(CMD_SHOW_DETAIL, id, arr, rect.x, rect.y, rect.width, rect.height, color);
       }
     }
     public function removeDetail(id:int):void {
