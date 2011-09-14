@@ -77,6 +77,7 @@ var ui = {
       d: $('#date').val(),
       b: $('#btype').val(),
       ab: $('#ab').val(),
+      useHtmlDetail : true,
       nocache: $('#cache').prop('checked') ? 0 : 1,
       visitor: $('#oldnew').val()
     };
@@ -119,22 +120,25 @@ var ui = {
   }
 };
 var CountArea = {
-  showDetail : function (arr, x, y, w, h, color, id) {
-    var list = [];
-    for (var i = 0, len = arr.length; i < len; i += 1) {
-      list.push({link: arr[i][4], num: arr[i][5]});
-    }
+  showDetail : function (id, arr, x, y, w, h, color) {
     var panel = $('#dp' + id);
     if (panel.length == 0) {
       panel = new DataPanel(list, color, id);
-    } else {
-      panel.setURLS(list);
     }
-    panel.moveTo(x, y);
-    
-    // 基于当前坐标的特殊处理
-    if ($(window).width() - x - _width < panel.width() + 16) {
-      panel.x = - panel.width() - 16;
+    if (arr != null) {
+      var list = [];
+      for (var i = 0, len = arr.length; i < len; i += 1) {
+        list.push({link: arr[i][4], num: arr[i][5]});
+      }
+      panel.setURLS(list);
+      // 定位
+      if ($(window).width() - x - _width > panel.width() + 10) {
+        panel.moveTo(panel.width() - 16, y);
+      } else if (x > 310) {
+        panel.moveTo(x - 310, y);
+      } else {
+        panel.moveTo(x, y + h + 10);
+      }
     }
   },
   removeDetail : function (id) {
