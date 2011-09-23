@@ -22,7 +22,7 @@ package brunch.clickHeatMap.map.area {
     // Class Variables
     //=========================================================================
 		public static var cur:DrawingAreaBase;
-    public static var count:int = -1;
+    public static var count:int = 0;
     public static var items:Array = [];
 		//=========================================================================
     // Class Public Methods
@@ -156,9 +156,7 @@ package brunch.clickHeatMap.map.area {
 		}
     protected function onClick(evt:MouseEvent):void {
       evt.stopPropagation();
-      if (external.useHtmlDetail) {
-        external.showDetail(index);
-      } else if (!_panel.visible) {
+      if (!_panel.visible) {
         toggleList();
       }
     }

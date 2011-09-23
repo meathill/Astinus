@@ -51,7 +51,7 @@ package brunch.clickHeatMap.model {
     //========================================================================= 
 		public var clientWidth:int;
 		public var remote:String;
-    public var useHtmlDetail:Boolean = false;
+    public var useHtmlDetail:Boolean = true;
     public function get param():URLVariables {
       return new URLVariables(_param.toString());
     }

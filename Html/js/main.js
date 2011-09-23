@@ -55,7 +55,7 @@ var ui = {
       var _ifr = $('#page')[0];
       _ifr.attachEvent('onload', ui.setMapHeight);
     }
-    $('#url').keydown(ui.onKeyDown);
+    $('#url').focus().keydown(ui.onKeyDown);
   },
   createHeatMap : function () {
     var target = utils.correctURL($('#url').val());
@@ -121,27 +121,34 @@ var ui = {
 };
 var CountArea = {
   showDetail : function (id, arr, x, y, w, h, color) {
+    console.log('show : ' + id);
     var panel = $('#dp' + id);
-    if (panel.length == 0) {
-      panel = new DataPanel(list, color, id);
-    }
     if (arr != null) {
       var list = [];
       for (var i = 0, len = arr.length; i < len; i += 1) {
         list.push({link: arr[i][4], num: arr[i][5]});
+      } 
+      if (panel.length == 0) {
+        console.log('new');
+        panel = new DataPanel(list, '#' +  color.toString(16), id);
+      } else {
+        console.log('old');
+        panel.setURLS(list);
       }
-      panel.setURLS(list);
+      
       // ¶¨Î»
-      if ($(window).width() - x - _width > panel.width() + 10) {
-        panel.moveTo(panel.width() - 16, y);
+      if ($(window).width() - x - w > 310) {
+        panel.moveTo(x + w + 10, y);
       } else if (x > 310) {
         panel.moveTo(x - 310, y);
       } else {
         panel.moveTo(x, y + h + 10);
       }
     }
+    panel.appendTo($('#map_con'));
   },
   removeDetail : function (id) {
+    console.log('close : ' + id);
     $('#dp' + id).close();
   }
 };

@@ -38,7 +38,6 @@ function DataPanel(arr, color, id) {
     self.remove();
   }
   this.onData = function (data) {
-    console.log(data);
     var result;
     if (data == '') {
       result = '无相关数据';
