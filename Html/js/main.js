@@ -13,6 +13,7 @@ var ui = {
   rec: '',
   ab: '',
   date: '',
+  scroll: 0,
   init : function () {
     // 日期选项
     $('#date')
@@ -103,7 +104,13 @@ var ui = {
     }
   },
   getScroll : function () {
-    return document.documentElement.scrollTop || document.body.scrollTop;
+    var scroll = document.documentElement.scrollTop || document.body.scrollTop;
+    if (this.scroll != scroll) {
+      $('.DataPanel').each(function (index) {
+        $(this).trigger('scroll', scroll);
+      });
+    }
+    return scroll;
   },
   toggleHeatMap : function (evt) {
     if ($('#map_con').css('visibility') == 'visible'){
@@ -121,16 +128,16 @@ var ui = {
 };
 var CountArea = {
   showDetail : function (id, arr, x, y, w, h, color) {
-    console.log('show : ' + id);
     var panel = $('#dp' + id);
-    if (arr != null) {
+    if (panel.length == 0 && arr != null) {
       var list = [];
       for (var i = 0, len = arr.length; i < len; i += 1) {
         list.push({link: arr[i][4], num: arr[i][5]});
       } 
       if (panel.length == 0) {
         console.log('new');
-        panel = new DataPanel(list, '#' +  color.toString(16), id);
+        panel = new DataPanel(list, '#' + color.toString(16), id);
+        items.push(panel);
       } else {
         console.log('old');
         panel.setURLS(list);
@@ -144,14 +151,16 @@ var CountArea = {
       } else {
         panel.moveTo(x, y + h + 10);
       }
+      panel.appendTo($('#map_con'));
+    } else {
+      panel.trigger('show');
     }
-    panel.appendTo($('#map_con'));
   },
   removeDetail : function (id) {
-    console.log('close : ' + id);
-    $('#dp' + id).close();
+    $('#dp' + id).trigger('remove');
   }
 };
+var items = [];
 var utils = {
   /**
    * 这个函数用来检查url输入的合法性，并自动更正

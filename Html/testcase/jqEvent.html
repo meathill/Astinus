@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+    <title>测试jq事件</title>
+    <style>
+      .con{width:200px;height:80px;border:2px solid #CCC;background: #DEF;border-radius: 4px;}
+    </style>
+    <script src="../../../../Javascript/lib/jquery-1.6.4.min.js"></script>
+    <script>
+      $(function (e) {
+        $('button')
+          .bind('meathill', onMeathill)
+          .click(function (evt) {
+            $(this).trigger('meathill');
+          });
+      });
+      function onMeathill() {
+        var init = {'class': 'con'};
+        var div = $('<div>', init).appendTo($('body'));
+      }
+    </script>
+  </head>
+  <body>
+    <button>测试</button>
+  </body>
+</html>

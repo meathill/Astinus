@@ -13,7 +13,7 @@ function DataPanel(arr, color, id) {
     init.maxHeight = init.minHeight = self.body.height();
     self.body.resizable(init);
   }
-  this.show = function (evt) {
+  this.switchItem = function (evt) {
     if (index != -1) {
       return;
     }
@@ -35,7 +35,18 @@ function DataPanel(arr, color, id) {
     }
   }
   this.close = function (evt) {
-    self.remove();
+    self.body.hide();
+  }
+  this.remove = function (evt) {
+    self.body.unbind('remove', self.remove);
+    self.body.unbind('show', self.show);
+    self.body.remove();
+  }
+  this.show = function () {
+    self.body.show();
+  }
+  this.scroll = function (evt, value) {
+    
   }
   this.onData = function (data) {
     var result;
@@ -73,11 +84,13 @@ function DataPanel(arr, color, id) {
   var init = {'id': 'dp' + id,
               'class': 'DataPanel ui-widget-content',
               'style': 'border-color:' + color + ';background:' + color};
-  this.body = $('<dl>', init);
+  this.body = $('<dl>', init)
+                .bind('remove', this.remove)
+                .bind('show', this.show);
   for (var i = 0; i < this.list.length; i++) {
     init = {text: this.list[i],
             'index': i,
-            click: this.show};
+            click: this.switchItem};
     this.body.append($('<dt>', init));
     this.body.append($('<dd>'));
   }
@@ -104,7 +117,7 @@ function DataPanel(arr, color, id) {
           alsoResize: '.dragbar'};
 }
 DataPanel.prototype.list = ['链接', '产品', '标题', '页面类型'];
-DataPanel.prototype.type = ['url', 'product', 'title', 'page_type']
+DataPanel.prototype.type = ['url', 'product', 'title', 'page_type'];
 DataPanel.prototype.url = '';
 DataPanel.prototype.r = '';
 DataPanel.prototype.date = '';
@@ -127,7 +140,4 @@ DataPanel.prototype.setURLS = function (arr) {
   var dd = this.body.children('dd').eq(0);
   dd.empty().append(table);
   dd.css('display', 'block');
-}
-DataPanel.prototype.remove = function (evt) {
-  this.body.remove();
 }
