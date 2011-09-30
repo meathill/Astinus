@@ -6,18 +6,24 @@ package brunch.clickHeatMap.map.area {
    */
   public class HTMLDrawingArea extends DrawingAreaBase {
     //==========================================================================
+    //  Override Properties : DrawingAreaBase
+    //==========================================================================
+    
+    //==========================================================================
     //  Override Protected Functions : DrawingAreaBase
     //==========================================================================
     override protected function init():void {
       super.init();
       
       hideButton.removeEventListener(MouseEvent.CLICK, toggleList);
-      removeChild(hideButton);
-      hideButton = null;
     }
     override protected function closeHandler(evt:MouseEvent = null):void {
       super.closeHandler(evt);
       external.removeDetail(index);
+    }
+    override protected function onClick(evt:MouseEvent):void {
+      evt.stopImmediatePropagation();
+      external.showDetail(index);
     }
     //==========================================================================
     //  Override Public Methods : DrawingAreaBase
