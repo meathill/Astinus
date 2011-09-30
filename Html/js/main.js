@@ -10,6 +10,7 @@
  */
 var ui = {
   interval: 0,
+  scroll: 0,
   rec: '',
   ab: '',
   date: '',
@@ -103,7 +104,14 @@ var ui = {
     }
   },
   getScroll : function () {
-    return document.documentElement.scrollTop || document.body.scrollTop;
+    var scroll = document.documentElement.scrollTop || document.body.scrollTop;
+    if (scroll != this.scroll) {
+      this.scroll = scroll;
+      $('.DataPanel').each(function (index) {
+        $(this).triggerHandler('scroll', scroll);
+      });
+    }
+    return scroll;
   },
   toggleHeatMap : function (evt) {
     if ($('#map_con').css('visibility') == 'visible'){

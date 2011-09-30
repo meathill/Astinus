@@ -13,7 +13,7 @@ function DataPanel(arr, color, id) {
     init.maxHeight = init.minHeight = self.body.height();
     self.body.resizable(init);
   }
-  this.show = function (evt) {
+  this.switchItem = function (evt) {
     if (index != -1) {
       return;
     }
@@ -38,7 +38,6 @@ function DataPanel(arr, color, id) {
     self.remove();
   }
   this.onData = function (data) {
-    console.log(data);
     var result;
     if (data == '') {
       result = '无相关数据';
@@ -73,12 +72,13 @@ function DataPanel(arr, color, id) {
   // 主体使用dl，里面每个模块都是dt+dd
   var init = {'id': 'dp' + id,
               'class': 'DataPanel ui-widget-content',
-              'style': 'border-color:' + color + ';background:' + color};
+              'style': 'border-color:' + color + ';background:' + color,
+              'scroll': this.scroll};
   this.body = $('<dl>', init);
   for (var i = 0; i < this.list.length; i++) {
     init = {text: this.list[i],
             'index': i,
-            click: this.show};
+            click: this.switchItem};
     this.body.append($('<dt>', init));
     this.body.append($('<dd>'));
   }
@@ -130,5 +130,11 @@ DataPanel.prototype.setURLS = function (arr) {
   dd.css('display', 'block');
 }
 DataPanel.prototype.remove = function (evt) {
-  this.body.remove();
+  this.body.hide();
+}
+DataPanel.prototype.show = function () {
+  this.body.show();
+}
+DataPanel.prototype.scroll = function (evt, obj) {
+  
 }
