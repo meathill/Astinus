@@ -13,6 +13,9 @@ function DataPanel(arr, color, id) {
     init.maxHeight = init.minHeight = self.body.height();
     self.body.resizable(init);
   }
+  this.setRect = function (x, y, w, h) {
+    select = [x, y, w, h].join('.');
+  }
   this.switchItem = function (evt) {
     if (index != -1) {
       return;
@@ -28,7 +31,7 @@ function DataPanel(arr, color, id) {
       $(this).next().html('加载数据，请稍候');
       index = parseInt($(this).attr('index'));
       var param = {r: self.r,
-                   select: self.select + '.' + self.type[index],
+                   select: select + '.' + self.type[index],
                    w: $(window).width(),
                    d: self.date};
       $.get(self.url, param, self.onData);
@@ -46,7 +49,7 @@ function DataPanel(arr, color, id) {
     self.body.show();
   }
   this.scroll = function (evt, value) {
-    
+    self.body.css('top', parseInt(self.body.attr('scroll')) - value + 'px');
   }
   this.onData = function (data) {
     var result;
@@ -70,6 +73,9 @@ function DataPanel(arr, color, id) {
     self.body.children('dd').eq(index).empty().append(result);
     index = -1;
   }
+  this.onDrag = function (evt, ui) {
+    self.body.attr('scroll', ui.position.top);
+  }
   
   /**
    * @public
@@ -83,11 +89,12 @@ function DataPanel(arr, color, id) {
   // 主体使用dl，里面每个模块都是dt+dd
   var init = {'id': 'dp' + id,
               'class': 'DataPanel ui-widget-content',
-              'style': 'border-color:' + color + ';background:' + color,
-              'scroll': this.scroll};
-  this.body = $('<dl>', init)
-                .bind('remove', this.remove)
-                .bind('show', this.show);
+              'style': 'border-color:' + color + ';background:' + color};
+  this.body = $('<dl>', init);
+  this.body
+    .bind('show', this.show)
+    .bind('remove', this.remove)
+    .bind('scroll', this.scroll);
   for (var i = 0; i < this.list.length; i++) {
     init = {text: this.list[i],
             'index': i,
@@ -100,7 +107,7 @@ function DataPanel(arr, color, id) {
           'alt': '拖动窗体'}
   var drag = $('<div>', init).html('<img src="http://works.meathill.net/images/spacer.gif" />');
   drag.appendTo(this.body);
-  this.body.draggable({handle: '.dragbar', stack: '.DataPanel'});
+  this.body.draggable({handle: '.dragbar', stack: '.DataPanel', drag: this.onDrag});
   // 关闭按钮
   init = {'class': 'close',
           'href': 'javascript:void(0);',
@@ -119,12 +126,11 @@ function DataPanel(arr, color, id) {
 }
 DataPanel.prototype.list = ['链接', '产品', '标题', '页面类型'];
 DataPanel.prototype.type = ['url', 'product', 'title', 'page_type'];
-DataPanel.prototype.url = '';
-DataPanel.prototype.r = '';
-DataPanel.prototype.date = '';
+DataPanel.prototype.url = 'http://area.zol.com.cn/cgi-bin/click_url.cgi';
 DataPanel.prototype.moveTo = function (x, y) {
   this.body.css('left', x + 'px');
   this.body.css('top', y + 'px');
+  this.body.attr('scroll', y);
 }
 DataPanel.prototype.setURLS = function (arr) {
   var init = {'cellspacing': 1,
@@ -141,5 +147,4 @@ DataPanel.prototype.setURLS = function (arr) {
   var dd = this.body.children('dd').eq(0);
   dd.empty().append(table);
   dd.css('display', 'block');
-}
 }

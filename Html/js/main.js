@@ -10,7 +10,6 @@
  */
 var ui = {
   interval: 0,
-  scroll: 0,
   rec: '',
   ab: '',
   date: '',
@@ -95,6 +94,10 @@ var ui = {
     // 显示iframe等
     $('#con, #map_con').removeClass('hide');
     
+    // 划区面板的目标url和日期
+    DataPanel.prototype.r = target;
+    DataPanel.prototype.date = $('#date').val();
+    
     // 30s后自动取已加载页面的高度
     ui.interval = setInterval(ui.setMapHeight, 30000);
   },
@@ -135,15 +138,9 @@ var CountArea = {
       var list = [];
       for (var i = 0, len = arr.length; i < len; i += 1) {
         list.push({link: arr[i][4], num: arr[i][5]});
-      } 
-      if (panel.length == 0) {
-        console.log('new');
-        panel = new DataPanel(list, '#' + color.toString(16), id);
-        items.push(panel);
-      } else {
-        console.log('old');
-        panel.setURLS(list);
       }
+      panel = new DataPanel(list, '#' + color.toString(16), id);
+      panel.setRect(x, y, w, h); 
       
       // 定位
       if ($(window).width() - x - w > 310) {
@@ -162,7 +159,6 @@ var CountArea = {
     $('#dp' + id).trigger('remove');
   }
 };
-var items = [];
 var utils = {
   /**
    * 这个函数用来检查url输入的合法性，并自动更正

@@ -18,8 +18,8 @@ package brunch.clickHeatMap.map.area {
       hideButton.removeEventListener(MouseEvent.CLICK, toggleList);
     }
     override protected function closeHandler(evt:MouseEvent = null):void {
-      super.closeHandler(evt);
       external.removeDetail(index);
+      super.closeHandler(evt);
     }
     override protected function onClick(evt:MouseEvent):void {
       evt.stopImmediatePropagation();
@@ -28,9 +28,5 @@ package brunch.clickHeatMap.map.area {
     //==========================================================================
     //  Override Public Methods : DrawingAreaBase
     //==========================================================================
-    override public function set detail(value:Vector.<Array>):void {
-      super.detail = value;
-      external.removeDetail(index);
-    }
   }
 }
